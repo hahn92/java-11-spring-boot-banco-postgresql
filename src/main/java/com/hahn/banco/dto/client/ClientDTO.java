@@ -8,6 +8,7 @@ import com.hahn.banco.entity.constant.StateType;
 
 public class ClientDTO {
 
+	private long id;
 	private String name;
 	private String surname;
 	private String username;
@@ -20,8 +21,9 @@ public class ClientDTO {
 	private StateType state;
 
 
-	public ClientDTO(String name, String surname, String username, String email, Date birthdate, String telephone,
+	public ClientDTO(long id, String name, String surname, String username, String email, Date birthdate, String telephone,
 			DocumentType documentType, String document, AddressDTO address, StateType state) {
+		this.id = id;
 		this.name = name;
 		this.surname = surname;
 		this.username = username;
@@ -35,6 +37,12 @@ public class ClientDTO {
 	}
 
 	
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
 	public String getName() {
 		return name;
 	}

@@ -5,18 +5,26 @@ import com.hahn.banco.entity.constant.StateType;
 
 public class CityDTO {
 
+	private long id;
 	private DepartmentDTO department;
 	private String name;
 	private StateType state;
 
 	
-	public CityDTO(DepartmentDTO department, String name, StateType state) {
+	public CityDTO(long id, DepartmentDTO department, String name, StateType state) {
+		this.id = id;
 		this.department = department;
 		this.name = name;
 		this.state = state;
 	}
 
-
+	
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
 	public DepartmentDTO getDepartment() {
 		return department;
 	}

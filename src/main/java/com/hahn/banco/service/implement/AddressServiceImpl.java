@@ -35,7 +35,7 @@ public class AddressServiceImpl {
   // }
 
   private AddressDTO toDTO(Address address) {
-      return new AddressDTO(address.getCity(), address.getStreet(), address.getDirection(), address.getState());
+      return new AddressDTO(address.getId(), address.getCity(), address.getStreet(), address.getDirection(), address.getState());
   }
 
 }

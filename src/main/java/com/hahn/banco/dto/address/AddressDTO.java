@@ -5,13 +5,15 @@ import com.hahn.banco.entity.constant.StateType;
 
 public class AddressDTO {
 
+	private long id;
 	private City city;
 	private Boolean street;
 	private String direction;
 	private StateType state;
 
 	
-	public AddressDTO(City city, Boolean street, String direction, StateType state) {
+	public AddressDTO(long id, City city, Boolean street, String direction, StateType state) {
+		this.id = id;
 		this.city = city;
 		this.street = street;
 		this.direction = direction;
@@ -19,6 +21,12 @@ public class AddressDTO {
 	}
 
 
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
 	public City getCity() {
 		return city;
 	}

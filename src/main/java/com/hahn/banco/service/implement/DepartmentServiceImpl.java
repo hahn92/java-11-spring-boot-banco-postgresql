@@ -51,7 +51,7 @@ public class DepartmentServiceImpl implements IDepartmentService{
 
     private DepartmentDTO toDTO(Department department) {
         LOGGER.debug("+++ toDTO: "+department.toString());
-        return new DepartmentDTO(department.getName(), department.getState());
+        return new DepartmentDTO(department.getId(), department.getName(), department.getState());
     }
 
     private Department toEntity (DepartmentPostDTO departmentDTO) {

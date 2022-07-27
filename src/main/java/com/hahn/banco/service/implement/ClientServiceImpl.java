@@ -79,7 +79,7 @@ public class ClientServiceImpl implements UserDetailsService, IClientService{
 
     private ClientDTO toDTO(Client client) {
         LOGGER.debug("+++ toDTO: "+client.toString());
-        return new ClientDTO(client.getName(), client.getSurname(), client.getUsername(), client.getEmail(), client.getBirthdate(), client.getTelephone(), client.getDocumentType(), client.getDocument(), this.toDTO(client.getAddress()), client.getState());
+        return new ClientDTO(client.getId(), client.getName(), client.getSurname(), client.getUsername(), client.getEmail(), client.getBirthdate(), client.getTelephone(), client.getDocumentType(), client.getDocument(), this.toDTO(client.getAddress()), client.getState());
     }
 
     private Client toEntity (ClientPostDTO clientDTO) {
@@ -90,7 +90,7 @@ public class ClientServiceImpl implements UserDetailsService, IClientService{
     }
 
     private AddressDTO toDTO(Address address) {
-        return new AddressDTO(address.getCity(), address.getStreet(), address.getDirection(), address.getState());
+        return new AddressDTO(address.getId(), address.getCity(), address.getStreet(), address.getDirection(), address.getState());
     }
 
 }

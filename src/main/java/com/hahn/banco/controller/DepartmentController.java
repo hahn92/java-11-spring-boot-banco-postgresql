@@ -32,23 +32,23 @@ public class DepartmentController {
 	}
 
 	@GetMapping("department/{id}")
-	public ResponseEntity<Optional<DepartmentDTO>> ClientGetById(@PathVariable Long id) {
-		LOGGER.debug("+++ ClientGetById: "+id);
+	public ResponseEntity<Optional<DepartmentDTO>> DepartamentGetById(@PathVariable Long id) {
+		LOGGER.debug("+++ DepartamentGetById: "+id);
 		try {
 			return new ResponseEntity<>(iDepartmentService.getById(id), HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("ClientGetById: "+e.getMessage());
+			LOGGER.error("DepartamentGetById: "+e.getMessage());
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@PostMapping("department/")
-	public ResponseEntity<DepartmentDTO> ClientSave(DepartmentPostDTO newClient) {
-		LOGGER.debug("+++ ClientSave: "+newClient.toString());
+	public ResponseEntity<DepartmentDTO> DepartmentSave(DepartmentPostDTO newClient) {
+		LOGGER.debug("+++ DepartmentSave: "+newClient.toString());
 		try {
 			return new ResponseEntity<>(iDepartmentService.save(newClient), HttpStatus.CREATED);
 		}catch (Exception e){
-			LOGGER.error("Rollback error registro Usuario: "+e);
+			LOGGER.error("Rollback error registro Departamento: "+e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
