@@ -19,6 +19,9 @@ public class City extends Audit{
     private String name;
 
 
+    public City() {
+        super();
+    }
     public City(Department department, String name) {
         super();
         this.department = department;

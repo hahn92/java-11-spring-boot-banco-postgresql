@@ -12,6 +12,9 @@ public class Department extends Audit{
     private String name;
 
     
+    public Department() {
+        super();
+    }
     public Department(String name) {
         super();
         this.name = name;

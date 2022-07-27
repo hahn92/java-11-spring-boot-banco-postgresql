@@ -39,6 +39,9 @@ public class Operation extends Audit{
     private String description;
 
 
+    public Operation() {
+        super();
+    }
     public Operation(Account account, Transaction transaction, OperationType operationType, Double balance,
             Double amount, String description) {
         this.account = account;

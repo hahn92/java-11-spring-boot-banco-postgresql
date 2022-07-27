@@ -26,6 +26,9 @@ public class BranchOffice extends Audit{
     private String code;
     
 
+    public BranchOffice() {
+        super();
+    }
     public BranchOffice(Employee employee, Address address, String name, String code) {
         super();
         this.employee = employee;

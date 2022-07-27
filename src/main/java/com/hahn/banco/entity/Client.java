@@ -35,6 +35,12 @@ public class Client extends Person {
     private List<Account> post = new ArrayList<>();
 
 
+	public Client() {
+		super();
+	}
+	public Client(Address address, String name, String surname, String telephone, DocumentType documentType, String document, Date birthdate) {
+		super(address, name, surname, telephone, documentType, document, birthdate);
+	}
 	public Client(Address address, String name, String surname, String telephone, DocumentType documentType, 
 			String document, Date birthdate, String username, String email, String password) {
 		super(address, name, surname, telephone, documentType, document, birthdate);

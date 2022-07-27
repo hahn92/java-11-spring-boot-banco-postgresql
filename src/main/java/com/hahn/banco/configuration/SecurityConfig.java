@@ -16,13 +16,13 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-//import com.hahn.banco.service.implement.ClientService;
+import com.hahn.banco.service.implement.ClientServiceImpl;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
-    //@Autowired
-	//private ClientService clientService;
+    @Autowired
+	private ClientServiceImpl clientService;
 
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -40,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-	    //auth.userDetailsService(clientService).passwordEncoder(passwordEnconder());
+	    auth.userDetailsService(clientService).passwordEncoder(passwordEnconder());
 	}
     
     @Bean

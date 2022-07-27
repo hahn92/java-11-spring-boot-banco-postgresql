@@ -18,6 +18,12 @@ public class Employee extends Person{
     private Role role;
 
     
+    public Employee() {
+        super();
+    }
+    public Employee(Address address, String name, String surname, String telephone, DocumentType documentType, String document, Date birthdate) {
+		super(address, name, surname, telephone, documentType, document, birthdate);
+    }
     public Employee(Address address, String name, String surname, String telephone, DocumentType documentType, 
             String document, Date birthdate, Role role) {
         super(address, name, surname, telephone, documentType, document, birthdate);

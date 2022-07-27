@@ -12,6 +12,9 @@ public class Role extends Audit{
     private String name;
 
     
+    public Role() {
+        super();
+    }
     public Role(String name) {
         super();
         this.name = name;
@@ -21,7 +24,6 @@ public class Role extends Audit{
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }

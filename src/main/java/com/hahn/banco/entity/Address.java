@@ -22,6 +22,9 @@ public class Address extends Audit{
 	private String direction;
 
 	
+	public Address() {
+		super();
+	}
 	public Address(City city, Boolean street, String direction) {
 		super();
 		this.city = city;

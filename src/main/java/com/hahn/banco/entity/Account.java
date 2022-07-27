@@ -49,6 +49,9 @@ public class Account extends Audit{
     private AccountType accountType;
 
 
+    public Account() {
+        super();
+    }
     public Account(BranchOffice branchOffice, Client client, String accountNumber,  Double balance, 
             Double beginBalance, AccountType accountType) {
         super();

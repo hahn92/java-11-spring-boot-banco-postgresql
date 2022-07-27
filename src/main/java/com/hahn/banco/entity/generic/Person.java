@@ -47,6 +47,9 @@ public class Person extends Audit {
 	private Date downDate;
 
 	
+	public Person() {
+		super();
+	}
 	public Person(Address address, String name, String surname, String telephone, DocumentType documentType, String document, Date birthdate) {
        	super();
 		this.address = address;

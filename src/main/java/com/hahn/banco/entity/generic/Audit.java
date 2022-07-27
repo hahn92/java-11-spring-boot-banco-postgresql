@@ -28,7 +28,7 @@ public class Audit {
 	@Column(name="modificationDate", nullable=false)
 	private Date modificationDate;
 
-
+    
     public Audit() {
         this.state = StateType.ACTIVE;
         Date dateNow = new Date(System.currentTimeMillis());
