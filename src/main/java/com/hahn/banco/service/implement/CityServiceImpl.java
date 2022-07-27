@@ -40,29 +40,29 @@ public class CityServiceImpl implements ICityService{
         City city = cityRepository.findById(id).get();
         if(city.getId() == null) {
             LOGGER.debug("+++ getById: "+city.toString());
-            return Optional.of(this.toDTO(city));
+            return Optional.of(this.toDTO(city, city.getDepartment().getId()));
         }
         return null;
     }
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public CityDTO save(CityPostDTO newCity) {
+    public CityDTO save(CityPostDTO newCity, long id_department) {
         // TODO Auto-generated method stub
-        City city = this.toEntity(newCity); 
+        City city = this.toEntity(newCity, id_department);
         LOGGER.debug("+++ save: "+city.toString());
-        return this.toDTO(cityRepository.save(city));
+        return this.toDTO(cityRepository.save(city), id_department);
     }
 
 
-    private CityDTO toDTO(City city) {
+    private CityDTO toDTO(City city, long id_department) {
         LOGGER.debug("+++ toDTO: "+city.toString());
         return new CityDTO(city.getId(), this.toDTO(city.getDepartment()), city.getName(),  city.getState());
     }
 
-    private City toEntity (CityPostDTO cityDTO) {
+    private City toEntity (CityPostDTO cityDTO, long id_department) {
         LOGGER.debug("+++ toEntity: "+cityDTO.toString());
-        Department department = departmentRepository.findById(cityDTO.getDepartment()).get();
+        Department department = departmentRepository.findById(id_department).get();
         LOGGER.debug("+++ toEntity: "+department.toString());
         return new City(department, cityDTO.getName());   
     }

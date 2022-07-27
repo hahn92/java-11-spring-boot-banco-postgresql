@@ -2,6 +2,8 @@ package com.hahn.banco.controller;
 
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,11 +44,11 @@ public class CityController {
 		}
 	}
 
-	@PostMapping("city/")
-	public ResponseEntity<CityDTO> CitySave(CityPostDTO newClient) {
+	@PostMapping("department/{id_department}/city/")
+	public ResponseEntity<CityDTO> CitySave(@PathVariable long id_department, @Valid CityPostDTO newClient) {
 		LOGGER.debug("+++ CitySave: "+newClient.toString());
 		try {
-			return new ResponseEntity<>(iCityService.save(newClient), HttpStatus.CREATED);
+			return new ResponseEntity<>(iCityService.save(newClient, id_department), HttpStatus.CREATED);
 		}catch (Exception e){
 			LOGGER.error("Rollback error registro Ciudad: "+e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
