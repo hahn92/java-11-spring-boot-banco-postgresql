@@ -1,54 +1,54 @@
-package com.hahn.banco.service;
+// package com.hahn.banco.service;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+// import org.junit.jupiter.api.BeforeEach;
+// import org.junit.jupiter.api.Test;
+// import org.mockito.Mockito;
 
-import com.hahn.banco.dto.department.DepartmentDTO;
-import com.hahn.banco.dto.department.DepartmentPostDTO;
-import com.hahn.banco.entity.Department;
-import com.hahn.banco.repository.DepartmentRepository;
-import com.hahn.banco.service.implement.DepartmentServiceImpl;
+// import com.hahn.banco.dto.department.DepartmentDTO;
+// import com.hahn.banco.dto.department.DepartmentPostDTO;
+// import com.hahn.banco.entity.Department;
+// import com.hahn.banco.repository.DepartmentRepository;
+// import com.hahn.banco.service.implement.DepartmentServiceImpl;
 
-import static org.junit.jupiter.api.Assertions.*;
+// import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Optional;
+// import java.util.Optional;
 
-public class DepartmentServiceImplTest {
+// public class DepartmentServiceImplTest {
 
-    private static DepartmentServiceImpl departmentServiceImpl;
+//     private static DepartmentServiceImpl departmentServiceImpl;
 
-    @BeforeEach
-    public void setUp() throws Exception {
-        DepartmentRepository departmentRepository = Mockito.mock(DepartmentRepository.class);
+//     @BeforeEach
+//     public void setUp() throws Exception {
+//         DepartmentRepository departmentRepository = Mockito.mock(DepartmentRepository.class);
 
-        Mockito.when(departmentRepository.findById(1L)).thenReturn(
-                Optional.of(new Department(1L, "Department 1"))
-        );
-        Mockito.when(departmentRepository.save(
-                Mockito.any(Department.class)
-        )).thenReturn(new Department(2L, "Department 2"));
+//         Mockito.when(departmentRepository.findById(1L)).thenReturn(
+//                 Optional.of(new Department(1L, "Department 1"))
+//         );
+//         Mockito.when(departmentRepository.save(
+//                 Mockito.any(Department.class)
+//         )).thenReturn(new Department(2L, "Department 2"));
         
 
-        departmentServiceImpl = new DepartmentServiceImpl(departmentRepository);
-    }
+//         departmentServiceImpl = new DepartmentServiceImpl(departmentRepository);
+//     }
 
 
-    @Test
-    public void return_deparment_by_id() {
+//     @Test
+//     public void return_deparment_by_id() {
 
-        DepartmentDTO departament = departmentServiceImpl.getById(1L).get();
-        assertEquals(1L, departament.getId());
+//         DepartmentDTO departament = departmentServiceImpl.getById(1L).get();
+//         assertEquals(1L, departament.getId());
 
-    }
+//     }
     
 
-    @Test
-    public void return_department_save() {
+//     @Test
+//     public void return_department_save() {
 
-        DepartmentDTO departament = departmentServiceImpl.save(new DepartmentPostDTO("Department 2"));
-        assertEquals("Department 2", departament.getName());
+//         DepartmentDTO departament = departmentServiceImpl.save(new DepartmentPostDTO("Department 2"));
+//         assertEquals("Department 2", departament.getName());
 
-    }
+//     }
     
-}
+// }

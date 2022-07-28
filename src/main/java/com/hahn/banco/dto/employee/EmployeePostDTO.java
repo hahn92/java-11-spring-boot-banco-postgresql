@@ -1,14 +1,12 @@
-package com.hahn.banco.dto.client;
+package com.hahn.banco.dto.employee;
 
 import java.sql.Date;
 
+import com.hahn.banco.dto.role.RoleDTO;
 import com.hahn.banco.entity.constant.DocumentType;
 
-public class ClientPostDTO {
+public class EmployeePostDTO {
 
-	private String username;
-	private String password;
-	private String email;
 	private String name;
 	private String surname;
 	private DocumentType documentType;
@@ -16,15 +14,11 @@ public class ClientPostDTO {
 	private String telephone;
 	private Date birthdate;
 	private Long address;
+	private Long role;
 
-	
-	public ClientPostDTO() {
-	}
-	public ClientPostDTO(String username, String password, String email, String name, String surname,
-			DocumentType documentType, String document, String telephone, Date birthdate, Long address) {
-		this.username = username;
-		this.password = password;
-		this.email = email;
+
+	public EmployeePostDTO(String name, String surname, DocumentType documentType, String document, String telephone,
+			Date birthdate, Long address, Long role) {
 		this.name = name;
 		this.surname = surname;
 		this.documentType = documentType;
@@ -32,27 +26,10 @@ public class ClientPostDTO {
 		this.telephone = telephone;
 		this.birthdate = birthdate;
 		this.address = address;
+		this.role = role;
 	}
 
-	
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
+
 	public String getName() {
 		return name;
 	}
@@ -95,4 +72,11 @@ public class ClientPostDTO {
 	public void setAddress(Long address) {
 		this.address = address;
 	}
+	public Long getRole() {
+		return role;
+	}
+	public void setRole(Long role) {
+		this.role = role;
+	}
+
 }
