@@ -17,7 +17,7 @@ public class OperationDTO {
 	private StateType state;
 
 	
-	public OperationDTO(AccountDTO account, TransactionDTO transaction, OperationType operationType, Double balance,
+	public OperationDTO(Long id, AccountDTO account, TransactionDTO transaction, OperationType operationType, Double balance,
 		Double amount, String description, StateType state) {
 		this.account = account;
 		this.transaction = transaction;

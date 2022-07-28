@@ -9,6 +9,6 @@ public interface IOperationService {
 
     Optional<OperationDTO> getById(Long id);
 
-    OperationDTO operation(OperationPostDTO newOperation, Long id_origin, Long id_destiny);
+    Boolean operation(OperationPostDTO newOperation, Long id_origin, Long id_destiny);
     
 }

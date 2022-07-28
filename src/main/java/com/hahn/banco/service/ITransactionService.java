@@ -9,6 +9,6 @@ public interface ITransactionService {
 
     Optional<TransactionDTO> getById(Long id);
 
-    TransactionDTO save(TransactionPostDTO newTransaction, Long id_city);
+    TransactionDTO save(TransactionPostDTO newTransaction);
     
 }
