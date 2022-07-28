@@ -26,6 +26,7 @@ public class AddressServiceImpl implements IAddressService {
   @Autowired
   private CityServiceImpl cityServiceiImpl;
 
+  public AddressServiceImpl(AddressRepository addressRepository) {}
   public AddressServiceImpl(AddressRepository addressRepository, CityServiceImpl cityServiceiImpl) {
     this.addressRepository = addressRepository;
     this.cityServiceiImpl = cityServiceiImpl;

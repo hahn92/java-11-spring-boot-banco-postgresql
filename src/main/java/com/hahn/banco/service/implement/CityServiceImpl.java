@@ -27,6 +27,9 @@ public class CityServiceImpl implements ICityService{
     @Autowired
     private DepartmentServiceImpl departmentServiceImpl;
 	
+    public CityServiceImpl(CityRepository cityRepository) {
+        this.cityRepository = cityRepository;
+    }
 	public CityServiceImpl(CityRepository cityRepository, DepartmentServiceImpl departmentServiceImpl) {
         this.cityRepository = cityRepository;
         this.departmentServiceImpl = departmentServiceImpl;
