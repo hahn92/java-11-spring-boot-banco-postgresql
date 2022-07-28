@@ -9,6 +9,6 @@ public interface IDepartmentService {
 
     Optional<DepartmentDTO> getById(Long id);
 
-    DepartmentDTO save(DepartmentPostDTO newClient);
+    DepartmentDTO save(DepartmentPostDTO newDepartment);
     
 }

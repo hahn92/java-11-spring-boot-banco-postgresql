@@ -2,6 +2,8 @@ package com.hahn.banco.controller;
 
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,11 +44,11 @@ public class ClientController {
 		}
 	}
 
-	@PostMapping("client/sing-up")
-	public ResponseEntity<ClientDTO> ClientSave(ClientPostDTO newClient) {
+	@PostMapping("address/{id_address}/client")
+	public ResponseEntity<ClientDTO> ClientSave(@PathVariable long id_address, @Valid ClientPostDTO newClient) {
 		LOGGER.debug("+++ ClientSave: "+newClient.toString());
 		try {
-			return new ResponseEntity<>(iClientService.save(newClient), HttpStatus.CREATED);
+			return new ResponseEntity<>(iClientService.save(newClient, id_address), HttpStatus.CREATED);
 		}catch (Exception e){
 			LOGGER.error("Rollback error registro Usuario: "+e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

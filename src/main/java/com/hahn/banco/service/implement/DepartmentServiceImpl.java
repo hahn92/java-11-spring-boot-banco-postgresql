@@ -49,12 +49,17 @@ public class DepartmentServiceImpl implements IDepartmentService{
     }
 
 
-    private DepartmentDTO toDTO(Department department) {
+    public DepartmentDTO toDTO(Department department) {
         LOGGER.debug("+++ toDTO: "+department.toString());
         return new DepartmentDTO(department.getId(), department.getName(), department.getState());
     }
 
-    private Department toEntity (DepartmentPostDTO departmentDTO) {
+    public Department toEntity (DepartmentPostDTO departmentDTO) {
+        LOGGER.debug("+++ toEntity: "+departmentDTO.toString());
+        return new Department(departmentDTO.getName());   
+    }
+
+    public Department toEntity (DepartmentDTO departmentDTO) {
         LOGGER.debug("+++ toEntity: "+departmentDTO.toString());
         return new Department(departmentDTO.getName());   
     }

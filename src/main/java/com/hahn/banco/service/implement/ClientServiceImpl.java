@@ -35,11 +35,11 @@ public class ClientServiceImpl implements UserDetailsService, IClientService{
     @Autowired
     private ClientRepository clientRepository;
     @Autowired
-    private AddressRepository addressRepository;
+    private AddressServiceImpl addressServiceImpl;
 	
-	public ClientServiceImpl(ClientRepository clientRepository, AddressRepository addressService) {
+	public ClientServiceImpl(ClientRepository clientRepository, AddressServiceImpl addressServiceImpl) {
         this.clientRepository = clientRepository;
-        this.addressRepository = addressRepository;
+        this.addressServiceImpl = addressServiceImpl;
     }
 
     @Override   
@@ -55,9 +55,9 @@ public class ClientServiceImpl implements UserDetailsService, IClientService{
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public ClientDTO save(ClientPostDTO newClient) {
+    public ClientDTO save(ClientPostDTO newClient, long id_address) {
         // TODO Auto-generated method stub
-        Client client = this.toEntity(newClient); 
+        Client client = this.toEntity(newClient, id_address); 
         LOGGER.debug("+++ save: "+client.toString());
         return this.toDTO(clientRepository.save(client));
     }
@@ -77,20 +77,17 @@ public class ClientServiceImpl implements UserDetailsService, IClientService{
 		 
 	}
 
-    private ClientDTO toDTO(Client client) {
+    public ClientDTO toDTO(Client client) {
         LOGGER.debug("+++ toDTO: "+client.toString());
-        return new ClientDTO(client.getId(), client.getName(), client.getSurname(), client.getUsername(), client.getEmail(), client.getBirthdate(), client.getTelephone(), client.getDocumentType(), client.getDocument(), this.toDTO(client.getAddress()), client.getState());
+        return new ClientDTO(client.getId(), client.getName(), client.getSurname(), client.getUsername(), client.getEmail(), client.getBirthdate(), client.getTelephone(), client.getDocumentType(), client.getDocument(), addressServiceImpl.toDTO(client.getAddress()), client.getState());
     }
 
-    private Client toEntity (ClientPostDTO clientDTO) {
+    public Client toEntity (ClientPostDTO clientDTO, long id_address) {
         LOGGER.debug("+++ toEntity: "+clientDTO.toString());
-        Address address = addressRepository.findById(clientDTO.getAddress()).get();
+        AddressDTO addressDTO = addressServiceImpl.getById(id_address).get();
+        Address address = addressServiceImpl.toEntity(addressDTO, addressDTO.getCity().getId());
         LOGGER.debug("+++ toEntity: "+address.toString());
         return new Client(address, clientDTO.getName(), clientDTO.getSurname(), clientDTO.getTelephone(), clientDTO.getDocumentType(), clientDTO.getDocument(), clientDTO.getBirthdate(), clientDTO.getUsername(), clientDTO.getEmail(), clientDTO.getPassword());   
-    }
-
-    private AddressDTO toDTO(Address address) {
-        return new AddressDTO(address.getId(), address.getCity(), address.getStreet(), address.getDirection(), address.getState());
     }
 
 }

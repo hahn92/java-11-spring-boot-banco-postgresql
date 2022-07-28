@@ -9,6 +9,6 @@ public interface IClientService {
 
     Optional<ClientDTO> getById(Long id);
 
-    ClientDTO save(ClientPostDTO newClient);
+    ClientDTO save(ClientPostDTO newClient, long id_address);
     
 }

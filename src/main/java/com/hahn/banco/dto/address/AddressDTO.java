@@ -1,18 +1,18 @@
 package com.hahn.banco.dto.address;
 
-import com.hahn.banco.entity.City;
+import com.hahn.banco.dto.city.CityDTO;
 import com.hahn.banco.entity.constant.StateType;
 
 public class AddressDTO {
 
 	private long id;
-	private City city;
+	private CityDTO city;
 	private Boolean street;
 	private String direction;
 	private StateType state;
 
 	
-	public AddressDTO(long id, City city, Boolean street, String direction, StateType state) {
+	public AddressDTO(long id, CityDTO city, Boolean street, String direction, StateType state) {
 		this.id = id;
 		this.city = city;
 		this.street = street;
@@ -27,10 +27,10 @@ public class AddressDTO {
 	public void setId(long id) {
 		this.id = id;
 	}
-	public City getCity() {
+	public CityDTO getCity() {
 		return city;
 	}
-	public void setCity(City city) {
+	public void setCity(CityDTO city) {
 		this.city = city;
 	}
 	public Boolean getStreet() {
