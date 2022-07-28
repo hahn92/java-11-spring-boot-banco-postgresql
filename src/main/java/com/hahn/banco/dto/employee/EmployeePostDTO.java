@@ -2,7 +2,6 @@ package com.hahn.banco.dto.employee;
 
 import java.sql.Date;
 
-import com.hahn.banco.dto.role.RoleDTO;
 import com.hahn.banco.entity.constant.DocumentType;
 
 public class EmployeePostDTO {

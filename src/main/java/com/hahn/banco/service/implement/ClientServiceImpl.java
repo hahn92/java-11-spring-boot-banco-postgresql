@@ -95,7 +95,7 @@ public class ClientServiceImpl implements UserDetailsService, IClientService{
         AddressDTO addressDTO = addressServiceImpl.getById(id_address).get();
         Address address = addressServiceImpl.toEntity(addressDTO, addressDTO.getCity().getId());
         LOGGER.debug("+++ ClientServiceImpl:toEntity: "+address.toString());
-        return new Client(clientDTO.getId(), address, clientDTO.getName(), clientDTO.getSurname(), clientDTO.getTelephone(), clientDTO.getDocumentType(), clientDTO.getDocument(), clientDTO.getBirthdate(), clientDTO.getUsername(), clientDTO.getEmail(), null);    
+        return new Client(clientDTO.getId(), address, clientDTO.getName(), clientDTO.getSurname(), clientDTO.getTelephone(), clientDTO.getDocumentType(), clientDTO.getDocument(), clientDTO.getBirthdate(), clientDTO.getUsername(), clientDTO.getEmail(), "123456789");    
     }
 
 }
