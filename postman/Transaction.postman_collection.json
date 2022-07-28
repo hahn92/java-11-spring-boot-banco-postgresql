@@ -1,0 +1,66 @@
+{
+	"info": {
+		"_postman_id": "04f9dd6d-635e-462e-97be-8b125fbc8c49",
+		"name": "Transaction",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1189034"
+	},
+	"item": [
+		{
+			"name": "Create Transaction",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "amount",
+							"value": "50000",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "Transacion entre cuentas",
+							"type": "text"
+						},
+						{
+							"key": "operationType",
+							"value": "CREDITO",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/{{api}}/v1/client/{{id_account1}}/client/{{id_account2}}/operation/",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{api}}",
+						"v1",
+						"client",
+						"{{id_account1}}",
+						"client",
+						"{{id_account2}}",
+						"operation",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

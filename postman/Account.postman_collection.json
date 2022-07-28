@@ -1,0 +1,71 @@
+{
+	"info": {
+		"_postman_id": "ac179b1b-64d2-46f6-bd53-2d9b84958946",
+		"name": "Account",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1189034"
+	},
+	"item": [
+		{
+			"name": "Create Account",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "balance",
+							"value": "{{balance}}",
+							"type": "text"
+						},
+						{
+							"key": "beginBalance",
+							"value": "{{beginBalance}}",
+							"type": "text"
+						},
+						{
+							"key": "accountNumber",
+							"value": "{{accountNumber2}}",
+							"type": "text"
+						},
+						{
+							"key": "accountType",
+							"value": "{{accountType1}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/{{api}}/v1/client/{{user_id}}/branchOffice/{{id_branchOffice}}/account/",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{api}}",
+						"v1",
+						"client",
+						"{{user_id}}",
+						"branchOffice",
+						"{{id_branchOffice}}",
+						"account",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
