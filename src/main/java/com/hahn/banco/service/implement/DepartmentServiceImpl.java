@@ -17,7 +17,7 @@ import com.hahn.banco.service.IDepartmentService;
 
 
 @Service
-public class DepartmentServiceImpl implements IDepartmentService{
+public class DepartmentServiceImpl implements IDepartmentService {
 	
     private static final Log LOGGER = LogFactory.getLog(DepartmentServiceImpl.class);
 	

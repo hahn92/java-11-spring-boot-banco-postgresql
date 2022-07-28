@@ -62,5 +62,10 @@ public class BranchOfficeDTO {
 	}
 
 
+	@Override
+	public String toString() {
+		return "BranchOfficeDTO [id=" + id + ", name=" + name + ", code=" + code + ", address=" + address + ", employee="
+				+ employee + ", state=" + state + "]";
+	}
 	
 }

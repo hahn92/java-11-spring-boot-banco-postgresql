@@ -52,4 +52,10 @@ public class AddressDTO {
 		this.state = state;
 	}
 
+	@Override
+	public String toString() {
+		return "AddressDTO [id=" + id + ", city=" + city + ", street=" + street + ", direction=" + direction + ", state="
+				+ state + "]";
+	}
+
 }

@@ -27,7 +27,7 @@ import com.hahn.banco.service.IClientService;
 
 
 @Service
-public class ClientServiceImpl implements UserDetailsService, IClientService{
+public class ClientServiceImpl implements UserDetailsService, IClientService {
 	
     private static final Log LOGGER = LogFactory.getLog(ClientServiceImpl.class);
 	

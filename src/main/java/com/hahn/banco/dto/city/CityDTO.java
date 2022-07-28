@@ -44,5 +44,9 @@ public class CityDTO {
 		this.state = state;
 	}
 
+	@Override
+	public String toString() {
+		return "CityDTO [id=" + id + ", department=" + department + ", name=" + name + ", state=" + state + "]";
+	}
 
 }

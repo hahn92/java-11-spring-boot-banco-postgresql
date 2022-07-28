@@ -97,4 +97,11 @@ public class EmployeeDTO {
 		this.state = state;
 	}
 	
+	@Override
+	public String toString() {
+		return "EmployeeDTO [id=" + id + ", name=" + name + ", surname=" + surname + ", birthdate=" + birthdate
+				+ ", telephone=" + telephone + ", documentType=" + documentType + ", document=" + document
+				+ ", address=" + address + ", role=" + role + ", state=" + state + "]";
+	}
+	
 }

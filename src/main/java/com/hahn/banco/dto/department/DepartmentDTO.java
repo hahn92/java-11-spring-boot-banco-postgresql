@@ -36,4 +36,9 @@ public class DepartmentDTO {
 	}
 
 
+	@Override
+	public String toString() {
+		return "DepartmentDTO [id=" + id + ", name=" + name + ", state=" + state + "]";
+	}
+
 }

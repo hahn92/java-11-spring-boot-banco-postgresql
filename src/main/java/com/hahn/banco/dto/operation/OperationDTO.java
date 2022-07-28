@@ -19,6 +19,7 @@ public class OperationDTO {
 	
 	public OperationDTO(Long id, AccountDTO account, TransactionDTO transaction, OperationType operationType, Double balance,
 		Double amount, String description, StateType state) {
+		this.id = id;
 		this.account = account;
 		this.transaction = transaction;
 		this.operationType = operationType;
@@ -106,6 +107,14 @@ public class OperationDTO {
 
 	public void setState(StateType state) {
 		this.state = state;
+	}
+
+	
+	@Override
+	public String toString() {
+		return "OperationDTO [id=" + id + ", account=" + account + ", transaction=" + transaction + ", operationType="
+				+ operationType + ", balance=" + balance + ", amount=" + amount + ", description=" + description
+				+ ", state=" + state + "]";
 	}
 
 }

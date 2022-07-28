@@ -35,4 +35,10 @@ public class RoleDTO {
 		this.state = state;
 	}
 
+	
+	@Override
+	public String toString() {
+		return "RoleDTO [id=" + id + ", name=" + name + ", state=" + state + "]";
+	}
+
 }

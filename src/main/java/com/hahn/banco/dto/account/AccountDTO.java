@@ -19,6 +19,7 @@ public class AccountDTO {
 	
     public AccountDTO(Long id, BranchOfficeDTO branchOffice, ClientDTO client, String accountNumber,  Double balance, 
             Double beginBalance, AccountType accountType, StateType state) {
+		this.id = id;
         this.branchOffice = branchOffice;
         this.client = client;
         this.accountNumber = accountNumber;
@@ -76,6 +77,13 @@ public class AccountDTO {
 	}
 	public void setState(StateType state) {
 		this.state = state;
+	}
+
+	@Override
+	public String toString() {
+		return "AccountDTO [id=" + id + ", branchOffice=" + branchOffice + ", client=" + client + ", accountNumber="
+				+ accountNumber + ", balance=" + balance + ", beginBalance=" + beginBalance + ", accountType="
+				+ accountType + ", state=" + state + "]";
 	}
 
 }

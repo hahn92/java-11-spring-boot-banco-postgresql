@@ -27,5 +27,9 @@ public class TransactionDTO {
 		this.state = state;
 	}
 
+	@Override
+	public String toString() {
+		return "TransactionDTO [id=" + id + ", state=" + state + "]";
+	}
 
 }

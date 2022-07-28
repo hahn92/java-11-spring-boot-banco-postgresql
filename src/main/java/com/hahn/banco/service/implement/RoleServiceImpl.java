@@ -64,5 +64,6 @@ public class RoleServiceImpl implements IRoleService {
         LOGGER.debug("+++ RoleServiceImpl:toEntity: "+roleDTO.toString());
         return new Role(roleDTO.getId(), roleDTO.getName());   
     }
+    
 
 }

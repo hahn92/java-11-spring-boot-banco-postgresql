@@ -59,6 +59,16 @@ public class AccountServiceImpl implements IAccountService{
         return this.toDTO(accountRepository.save(account), id_client, id_branchOffice);
     }
 
+    public void update(Double amount, Long id) {
+        LOGGER.debug("+++ AccountServiceImpl:update: "+amount+" " + id);
+		accountRepository.findById(id).map(
+                account -> {
+                    account.setBeginBalance(account.getBalance());
+                    account.setBalance(amount);
+                    return accountRepository.save(account);
+                }
+        );
+	}
 
     public AccountDTO toDTO(Account account, Long id_client, Long id_branchOffice) {
         LOGGER.debug("+++ AccountServiceImpl:toDTO: "+account.toString());
