@@ -9,6 +9,6 @@ public interface IAddressService {
 
     Optional<AddressDTO> getById(Long id);
 
-    AddressDTO save(AddressPostDTO newAddress, long id_city);
+    AddressDTO save(AddressPostDTO newAddress, Long id_city);
     
 }

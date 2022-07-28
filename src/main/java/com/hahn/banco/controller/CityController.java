@@ -45,10 +45,10 @@ public class CityController {
 	}
 
 	@PostMapping("department/{id_department}/city/")
-	public ResponseEntity<CityDTO> CitySave(@PathVariable long id_department, @Valid CityPostDTO newClient) {
-		LOGGER.debug("+++ CitySave: "+newClient.toString());
+	public ResponseEntity<CityDTO> CitySave(@PathVariable Long id_department, @Valid CityPostDTO newCity) {
+		LOGGER.debug("+++ CitySave: "+newCity.toString());
 		try {
-			return new ResponseEntity<>(iCityService.save(newClient, id_department), HttpStatus.CREATED);
+			return new ResponseEntity<>(iCityService.save(newCity, id_department), HttpStatus.CREATED);
 		}catch (Exception e){
 			LOGGER.error("Rollback error registro Ciudad: "+e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

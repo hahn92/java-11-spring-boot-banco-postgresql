@@ -29,6 +29,11 @@ public class Employee extends Person{
         super(address, name, surname, telephone, documentType, document, birthdate);
         this.role = role;
     }
+    public Employee(Long id, Address address, String name, String surname, String telephone, DocumentType documentType, 
+            String document, Date birthdate, Role role) {
+        super(id, address, name, surname, telephone, documentType, document, birthdate);
+        this.role = role;
+    }
 
 
     public Role getRole() {

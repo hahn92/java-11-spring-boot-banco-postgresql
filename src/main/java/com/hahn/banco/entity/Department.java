@@ -19,6 +19,10 @@ public class Department extends Audit{
         super();
         this.name = name;
     }
+    public Department(Long id, String name) {
+        super(id);
+        this.name = name;
+    }
 
 
     public String getName() {

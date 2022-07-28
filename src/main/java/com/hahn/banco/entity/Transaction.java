@@ -10,6 +10,9 @@ public class Transaction extends Audit{
     public Transaction() {
         super();
     }
+    public Transaction(Long id) {
+        super(id);
+    }
 
     @Override
     public String toString() {

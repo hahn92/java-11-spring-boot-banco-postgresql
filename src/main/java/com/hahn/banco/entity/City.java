@@ -27,6 +27,11 @@ public class City extends Audit{
         this.department = department;
         this.name = name;
     }
+    public City(Long id, Department department, String name) {
+        super(id);
+        this.department = department;
+        this.name = name;
+    }
 
     
     public Department getDepartment() {

@@ -31,6 +31,12 @@ public class Address extends Audit{
 		this.street = street;
 		this.direction = direction;
 	}
+	public Address(Long id, City city, Boolean street, String direction) {
+		super(id);
+		this.city = city;
+		this.street = street;
+		this.direction = direction;
+	}
 
 
 	public City getCity() {

@@ -44,6 +44,17 @@ public class Operation extends Audit{
     }
     public Operation(Account account, Transaction transaction, OperationType operationType, Double balance,
             Double amount, String description) {
+        super();
+        this.account = account;
+        this.transaction = transaction;
+        this.operationType = operationType;
+        this.balance = balance;
+        this.amount = amount;
+        this.description = description;
+    }
+    public Operation(Long id, Account account, Transaction transaction, OperationType operationType, Double balance,
+            Double amount, String description) {
+        super(id);
         this.account = account;
         this.transaction = transaction;
         this.operationType = operationType;

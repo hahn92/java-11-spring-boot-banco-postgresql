@@ -35,6 +35,13 @@ public class Audit {
         this.creationDate = dateNow;
         this.modificationDate = dateNow;
     }
+    public Audit(Long id) {
+        this.id = id;
+        this.state = StateType.ACTIVE;
+        Date dateNow = new Date(System.currentTimeMillis());
+        this.creationDate = dateNow;
+        this.modificationDate = dateNow;
+    }
     
     
     public Long getId() {

@@ -62,6 +62,16 @@ public class Account extends Audit{
         this.beginBalance = beginBalance;
         this.accountType = accountType;
     }
+    public Account(Long id, BranchOffice branchOffice, Client client, String accountNumber,  Double balance, 
+            Double beginBalance, AccountType accountType) {
+        super(id);
+        this.branchOffice = branchOffice;
+        this.client = client;
+        this.accountNumber = accountNumber;
+        this.balance = balance;
+        this.beginBalance = beginBalance;
+        this.accountType = accountType;
+    }
 
 
     public BranchOffice getBranchOffice() {

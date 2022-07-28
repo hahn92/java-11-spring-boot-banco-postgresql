@@ -48,6 +48,13 @@ public class Client extends Person {
 		this.email = email.toLowerCase();
 		this.password = new BCryptPasswordEncoder().encode(password);
 	}
+	public Client(Long id, Address address, String name, String surname, String telephone, DocumentType documentType, 
+			String document, Date birthdate, String username, String email, String password) {
+		super(id, address, name, surname, telephone, documentType, document, birthdate);
+        this.username = username;
+		this.email = email.toLowerCase();
+		this.password = new BCryptPasswordEncoder().encode(password);
+	}
 	
 
 	public String getEmail() {

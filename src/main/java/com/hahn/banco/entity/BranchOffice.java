@@ -36,6 +36,13 @@ public class BranchOffice extends Audit{
         this.name = name;
         this.code = code;
     }
+    public BranchOffice(Long id, Employee employee, Address address, String name, String code) {
+        super(id);
+        this.employee = employee;
+        this.address = address;
+        this.name = name;
+        this.code = code;
+    }
 
 
     public Employee getEmployee() {

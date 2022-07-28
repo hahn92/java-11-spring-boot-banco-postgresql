@@ -9,6 +9,6 @@ public interface ICityService {
 
     Optional<CityDTO> getById(Long id);
 
-    CityDTO save(CityPostDTO newCity, long id_department);
+    CityDTO save(CityPostDTO newCity, Long id_department);
     
 }

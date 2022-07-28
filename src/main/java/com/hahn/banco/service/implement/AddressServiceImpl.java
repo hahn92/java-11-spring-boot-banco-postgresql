@@ -33,42 +33,43 @@ public class AddressServiceImpl implements IAddressService {
 
   @Override   
   public Optional<AddressDTO> getById(Long id) {
-      // TODO Auto-generated method stub
-      Address address = addressRepository.findById(id).get();
-      if(address.getId() == null) {
-          LOGGER.debug("+++ getById: "+address.toString());
-          return Optional.of(this.toDTO(address));
-      }
-      return null;
+        // TODO Auto-generated method stub
+        Address address = addressRepository.findById(id).get();
+        if(address.getId() != null) {
+            LOGGER.debug("+++ AddressServiceImpl:getById: "+address.toString());
+            return Optional.of(this.toDTO(address, address.getCity().getId()));
+        }
+        LOGGER.debug("--- AddressServiceImpl:getById: No existe la direccion con id: "+id);
+        return null;
   }
 
   @Override
-  public AddressDTO save(AddressPostDTO addressDTO, long id_city) {
+  public AddressDTO save(AddressPostDTO addressDTO, Long id_city) {
       // TODO Auto-generated method stub
       Address address = this.toEntity(addressDTO, id_city);
-      LOGGER.debug("+++ save: "+address.toString());
-      return this.toDTO(addressRepository.save(address));
+      LOGGER.debug("+++ AddressServiceImpl:save: "+address.toString());
+      return this.toDTO(addressRepository.save(address), id_city);
   }
 
-  public AddressDTO toDTO(Address address) {
-      LOGGER.debug("+++ toDTO: "+address.toString());
-      return new AddressDTO(address.getId(), cityServiceiImpl.toDTO(address.getCity()), address.getStreet(), address.getDirection(), address.getState());
+  public AddressDTO toDTO(Address address, Long id_city) {
+      LOGGER.debug("+++ AddressServiceImpl:toDTO: "+address.toString());
+      return new AddressDTO(address.getId(), cityServiceiImpl.getById(id_city).get(), address.getStreet(), address.getDirection(), address.getState());
   }
 
-  public Address toEntity(AddressPostDTO addressDTO, long id_city) {
-      LOGGER.debug("+++ toEntity: "+addressDTO.toString());
+  public Address toEntity(AddressPostDTO addressDTO, Long id_city) {
+      LOGGER.debug("+++ AddressServiceImpl:toEntity: "+addressDTO.toString());
       CityDTO cityDTO = cityServiceiImpl.getById(id_city).get();
       City city = cityServiceiImpl.toEntity(cityDTO, cityDTO.getDepartment().getId());
-      LOGGER.debug("+++ toEntity: "+city.toString());
+      LOGGER.debug("+++ AddressServiceImpl:toEntity: "+city.toString());
       return new Address(city, addressDTO.getStreet(), addressDTO.getDirection());   
   }
 
-  public Address toEntity(AddressDTO addressDTO, long id_city) {
-      LOGGER.debug("+++ toEntity: "+addressDTO.toString());
+  public Address toEntity(AddressDTO addressDTO, Long id_city) {
+      LOGGER.debug("+++ AddressServiceImpl:toEntity: "+addressDTO.toString());
       CityDTO cityDept = cityServiceiImpl.getById(id_city).get();
       City city = cityServiceiImpl.toEntity(cityDept, cityDept.getDepartment().getId());
-      LOGGER.debug("+++ toEntity: "+city.toString());
-      return new Address(city, addressDTO.getStreet(), addressDTO.getDirection());   
+      LOGGER.debug("+++ AddressServiceImpl:toEntity: "+city.toString());
+      return new Address(addressDTO.getId(), city, addressDTO.getStreet(), addressDTO.getDirection());   
   }
 
 }

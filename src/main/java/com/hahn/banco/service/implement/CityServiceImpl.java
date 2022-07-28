@@ -36,40 +36,41 @@ public class CityServiceImpl implements ICityService{
     public Optional<CityDTO> getById(Long id) {
         // TODO Auto-generated method stub
         City city = cityRepository.findById(id).get();
-        if(city.getId() == null) {
-            LOGGER.debug("+++ getById: "+city.toString());
-            return Optional.of(this.toDTO(city));
+        if(city.getId() != null) {
+            LOGGER.debug("+++ CityServiceImpl:getById: "+city.toString());
+            return Optional.of(this.toDTO(city, city.getDepartment().getId()));
         }
+        LOGGER.debug("--- CityServiceImpl:getById: No existe la ciudad con id: "+id);
         return null;
     }
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public CityDTO save(CityPostDTO newCity, long id_department) {
+    public CityDTO save(CityPostDTO newCity, Long id_department) {
         // TODO Auto-generated method stub
         City city = this.toEntity(newCity, id_department);
-        LOGGER.debug("+++ save: "+city.toString());
-        return this.toDTO(cityRepository.save(city));
+        LOGGER.debug("+++ CityServiceImpl:save: "+city.toString());
+        return this.toDTO(cityRepository.save(city), id_department);
     }
 
 
-    public CityDTO toDTO(City city) {
-        LOGGER.debug("+++ toDTO: "+city.toString());
-        return new CityDTO(city.getId(), departmentServiceImpl.toDTO(city.getDepartment()), city.getName(),  city.getState());
+    public CityDTO toDTO(City city, Long id_department) {
+        LOGGER.debug("+++ CityServiceImpl:toDTO: "+city.toString());
+        return new CityDTO(city.getId(), departmentServiceImpl.getById(id_department).get(), city.getName(), city.getState());
     }
 
-    public City toEntity (CityPostDTO cityDTO, long id_department) {
-        LOGGER.debug("+++ toEntity: "+cityDTO.toString());
+    public City toEntity (CityPostDTO cityDTO, Long id_department) {
+        LOGGER.debug("+++ CityServiceImpl:toEntity: "+cityDTO.toString());
         Department department = departmentServiceImpl.toEntity(departmentServiceImpl.getById(id_department).get());
-        LOGGER.debug("+++ toEntity: "+department.toString());
+        LOGGER.debug("+++ CityServiceImpl:toEntity: "+department.toString());
         return new City(department, cityDTO.getName());   
     }
 
-    public City toEntity (CityDTO cityDTO, long id_department) {
-        LOGGER.debug("+++ toEntity: "+cityDTO.toString());
+    public City toEntity (CityDTO cityDTO, Long id_department) {
+        LOGGER.debug("+++ CityServiceImpl:toEntity: "+cityDTO.toString());
         Department department = departmentServiceImpl.toEntity(departmentServiceImpl.getById(id_department).get());
-        LOGGER.debug("+++ toEntity: "+department.toString());
-        return new City(department, cityDTO.getName());   
+        LOGGER.debug("+++ CityServiceImpl:toEntity: "+department.toString());
+        return new City(cityDTO.getId(), department, cityDTO.getName());   
     }
 
 

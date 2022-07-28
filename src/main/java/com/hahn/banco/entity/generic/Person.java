@@ -62,6 +62,18 @@ public class Person extends Audit {
 		Date dateNow = new Date(System.currentTimeMillis());
 		this.highDate = dateNow;
 	}
+	public Person(Long id, Address address, String name, String surname, String telephone, DocumentType documentType, String document, Date birthdate) {
+       	super(id);
+		this.address = address;
+		this.name = name;
+		this.surname = surname;
+		this.telephone = telephone;
+		this.documentType = documentType;
+		this.document = document;
+		this.birthdate = birthdate;
+		Date dateNow = new Date(System.currentTimeMillis());
+		this.highDate = dateNow;
+	}
 
 
 	public String getName() {

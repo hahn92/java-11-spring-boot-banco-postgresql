@@ -45,7 +45,7 @@ public class ClientController {
 	}
 
 	@PostMapping("address/{id_address}/client")
-	public ResponseEntity<ClientDTO> ClientSave(@PathVariable long id_address, @Valid ClientPostDTO newClient) {
+	public ResponseEntity<ClientDTO> ClientSave(@PathVariable Long id_address, @Valid ClientPostDTO newClient) {
 		LOGGER.debug("+++ ClientSave: "+newClient.toString());
 		try {
 			return new ResponseEntity<>(iClientService.save(newClient, id_address), HttpStatus.CREATED);

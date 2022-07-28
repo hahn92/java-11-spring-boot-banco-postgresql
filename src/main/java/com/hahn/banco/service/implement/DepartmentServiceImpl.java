@@ -32,10 +32,11 @@ public class DepartmentServiceImpl implements IDepartmentService{
     public Optional<DepartmentDTO> getById(Long id) {
         // TODO Auto-generated method stub
         Department department = departmentRepository.findById(id).get();
-        if(department.getId() == null) {
-            LOGGER.debug("+++ getById: "+department.toString());
+        if(department.getId() != null) {
+            LOGGER.debug("+++ DepartmentServiceImpl:getById: "+department.toString());
             return Optional.of(this.toDTO(department));
         }
+        LOGGER.debug("--- DepartmentServiceImpl:getById: No existe el departamento con id: "+id);
         return null;
     }
 
@@ -44,24 +45,24 @@ public class DepartmentServiceImpl implements IDepartmentService{
     public DepartmentDTO save(DepartmentPostDTO newDepartment) {
         // TODO Auto-generated method stub
         Department department = this.toEntity(newDepartment); 
-        LOGGER.debug("+++ save: "+department.toString());
+        LOGGER.debug("+++ DepartmentServiceImpl:save: "+department.toString());
         return this.toDTO(departmentRepository.save(department));
     }
 
 
     public DepartmentDTO toDTO(Department department) {
-        LOGGER.debug("+++ toDTO: "+department.toString());
+        LOGGER.debug("+++ DepartmentServiceImpl:toDTO: "+department.toString());
         return new DepartmentDTO(department.getId(), department.getName(), department.getState());
     }
 
     public Department toEntity (DepartmentPostDTO departmentDTO) {
-        LOGGER.debug("+++ toEntity: "+departmentDTO.toString());
+        LOGGER.debug("+++ DepartmentServiceImpl:toEntity: "+departmentDTO.toString());
         return new Department(departmentDTO.getName());   
     }
 
     public Department toEntity (DepartmentDTO departmentDTO) {
-        LOGGER.debug("+++ toEntity: "+departmentDTO.toString());
-        return new Department(departmentDTO.getName());   
+        LOGGER.debug("+++ DepartmentServiceImpl:toEntity: "+departmentDTO.toString());
+        return new Department(departmentDTO.getId(), departmentDTO.getName());   
     }
 
 }
