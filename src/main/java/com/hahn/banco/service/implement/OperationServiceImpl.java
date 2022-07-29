@@ -179,6 +179,7 @@ public class OperationServiceImpl implements IOperationService{
         Double newBalance2 = account2.getBalance() - amount;
         LOGGER.debug("+++ OperationServiceImpl:newBalance2: "+newBalance2);
         operation2.setBalance(newBalance2);
+        this.save(operation2);
         accountServiceImpl.update(operation2.getBalance(), operation2.getAccount().getId());
 
         return true;

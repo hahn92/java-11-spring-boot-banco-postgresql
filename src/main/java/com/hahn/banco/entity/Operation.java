@@ -35,7 +35,7 @@ public class Operation extends Audit{
     @Column(name="amount", nullable=false, length=20)
     private Double amount;
 
-    @Column(name="description", nullable=false, length=20)
+    @Column(name="description", nullable=false, length=140)
     private String description;
 
 
