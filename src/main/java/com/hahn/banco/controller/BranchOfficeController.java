@@ -44,11 +44,11 @@ public class BranchOfficeController {
 		}
 	}
 
-	@PostMapping("employee/{id_employee}/branchOffice/")
-	public ResponseEntity<BranchOfficeDTO> BranchOfficeSave(@PathVariable Long id_employee, @Valid BranchOfficePostDTO newBranchOffice) {
+	@PostMapping("address/{id_address}/employee/{id_employee}/branchOffice/")
+	public ResponseEntity<BranchOfficeDTO> BranchOfficeSave(@PathVariable Long id_address, @PathVariable Long id_employee, @Valid BranchOfficePostDTO newBranchOffice) {
 		LOGGER.debug("+++ BranchOfficeSave: "+newBranchOffice.toString());
 		try {
-			return new ResponseEntity<>(iBranchOfficeService.save(newBranchOffice, id_employee), HttpStatus.CREATED);
+			return new ResponseEntity<>(iBranchOfficeService.save(newBranchOffice, id_address, id_employee), HttpStatus.CREATED);
 		}catch (Exception e){
 			LOGGER.error("Rollback error registro Sucursal: "+e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

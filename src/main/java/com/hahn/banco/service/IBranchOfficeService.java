@@ -9,6 +9,6 @@ public interface IBranchOfficeService {
 
     Optional<BranchOfficeDTO> getById(Long id);
 
-    BranchOfficeDTO save(BranchOfficePostDTO newBranchOffice, Long id_employee);
+    BranchOfficeDTO save(BranchOfficePostDTO newBranchOffice, Long id_address, Long id_employee);
     
 }

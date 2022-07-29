@@ -12,20 +12,16 @@ public class EmployeePostDTO {
 	private String document;
 	private String telephone;
 	private Date birthdate;
-	private Long address;
-	private Long role;
 
 
 	public EmployeePostDTO(String name, String surname, DocumentType documentType, String document, String telephone,
-			Date birthdate, Long address, Long role) {
+			Date birthdate) {
 		this.name = name;
 		this.surname = surname;
 		this.documentType = documentType;
 		this.document = document;
 		this.telephone = telephone;
 		this.birthdate = birthdate;
-		this.address = address;
-		this.role = role;
 	}
 
 
@@ -64,18 +60,6 @@ public class EmployeePostDTO {
 	}
 	public void setBirthdate(Date birthdate) {
 		this.birthdate = birthdate;
-	}
-	public Long getAddress() {
-		return address;
-	}
-	public void setAddress(Long address) {
-		this.address = address;
-	}
-	public Long getRole() {
-		return role;
-	}
-	public void setRole(Long role) {
-		this.role = role;
 	}
 
 }
