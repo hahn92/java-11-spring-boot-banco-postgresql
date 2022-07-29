@@ -149,7 +149,9 @@ public class OperationServiceImpl implements IOperationService{
         operation1.setDescription(description);
         operation1.setTransaction(transactionServiceImpl.toEntity(transactionServiceImpl.getById(id_transaction).get()));
         operation1.setOperationType(OperationType.CREDITO);
-        operation1.setBalance(account1.getBalance() + amount);
+        Double newBalance1 = account1.getBalance() + amount;
+        LOGGER.debug("+++ OperationServiceImpl:newBalance1: "+newBalance1);
+        operation1.setBalance(newBalance1);
         accountServiceImpl.update(operation1.getBalance(), operation1.getAccount().getId());
 
 
@@ -157,8 +159,9 @@ public class OperationServiceImpl implements IOperationService{
         operation2.setDescription(description);
         operation2.setTransaction(transactionServiceImpl.toEntity(transactionServiceImpl.getById(id_transaction).get()));
         operation2.setOperationType(OperationType.DEBITO);
-        operation2.setBalance(account2.getBalance() - amount);
-        operationRepository.save(operation2);
+        Double newBalance2 = account2.getBalance() - amount;
+        LOGGER.debug("+++ OperationServiceImpl:newBalance2: "+newBalance2);
+        operation2.setBalance(newBalance2);
         accountServiceImpl.update(operation2.getBalance(), operation2.getAccount().getId());
 
         return true;
