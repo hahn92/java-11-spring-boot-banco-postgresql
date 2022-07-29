@@ -25,4 +25,9 @@ public class AddressPostDTO {
 		this.direction = direction;
 	}
 
+	@Override
+    public String toString() {
+		return "AddressPostDTO{ street=" + street + ", direction=" + direction + "}";
+	}
+
 }

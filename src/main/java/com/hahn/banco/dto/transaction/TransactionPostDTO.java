@@ -5,5 +5,8 @@ public class TransactionPostDTO {
 	
 	public TransactionPostDTO() {}
 
-
+	@Override
+    public String toString() {
+		return "TransactionPostDTO{}";		
+	}
 }

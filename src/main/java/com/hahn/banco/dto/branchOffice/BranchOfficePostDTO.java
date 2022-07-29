@@ -25,4 +25,9 @@ public class BranchOfficePostDTO {
 		this.code = code;
 	}
 
+	@Override
+    public String toString() {
+		return "BranchOfficePostDTO{ name=" + name + ", code=" + code + "}";
+	}
+
 }

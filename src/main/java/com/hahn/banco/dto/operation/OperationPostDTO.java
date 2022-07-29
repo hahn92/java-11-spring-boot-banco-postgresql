@@ -43,4 +43,9 @@ public class OperationPostDTO {
 		this.description = description;
 	}
 
+	@Override
+    public String toString() {
+		return "OperationPostDTO{ operationType=" + operationType + ", balance=" + balance + ", amount=" + amount + ", description=" + description + "}";
+	}
+
 }

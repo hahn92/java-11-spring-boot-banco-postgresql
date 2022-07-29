@@ -87,4 +87,11 @@ public class ClientPostDTO {
 	public void setBirthdate(Date birthdate) {
 		this.birthdate = birthdate;
 	}
+
+	@Override
+    public String toString() {
+		return "ClientPostDTO{ username=" + username + ", password=" + password + ", email=" + email + ", name=" + name
+				+ ", surname=" + surname + ", documentType=" + documentType + ", document=" + document
+				+ ", telephone=" + telephone + ", birthdate=" + birthdate + "}";
+	}
 }

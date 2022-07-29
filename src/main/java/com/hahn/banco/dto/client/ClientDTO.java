@@ -103,5 +103,12 @@ public class ClientDTO {
 	public void setState(StateType state) {
 		this.state = state;
 	}
+
+	@Override
+    public String toString() {
+		return "ClientDTO [id=" + id + ", name=" + name + ", surname=" + surname + ", username=" + username + ", email="
+				+ email + ", birthdate=" + birthdate + ", telephone=" + telephone + ", documentType=" + documentType
+				+ ", document=" + document + ", address=" + address + ", state=" + state + "]";
+	}
 	
 }

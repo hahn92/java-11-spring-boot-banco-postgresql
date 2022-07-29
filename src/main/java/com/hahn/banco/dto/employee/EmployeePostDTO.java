@@ -62,4 +62,10 @@ public class EmployeePostDTO {
 		this.birthdate = birthdate;
 	}
 
+	@Override
+    public String toString() {
+		return "EmployeePostDTO{ name=" + name + ", surname=" + surname + ", documentType=" + documentType
+				+ ", document=" + document + ", telephone=" + telephone + ", birthdate=" + birthdate + "}";
+	}
+
 }
