@@ -43,4 +43,9 @@ public class AccountPostDTO {
 		this.accountType = accountType;
 	}
 
+	@Override
+    public String toString() {
+		return "AccountPostDTO{ accountNumber=" + accountNumber + ", balance=" + balance + ", beginBalance=" + beginBalance + ", accountType=" + accountType + "}";
+	}
+
 }

@@ -24,16 +24,6 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{access}}",
-							"type": "string"
-						}
-					]
-				},
 				"method": "POST",
 				"header": [],
 				"body": {
@@ -52,7 +42,7 @@
 					]
 				},
 				"url": {
-					"raw": "{{protocol}}://{{host}}:{{port}}/{{api}}/v1/employee/{{id_employee}}/branchOffice/",
+					"raw": "{{protocol}}://{{host}}:{{port}}/{{api}}/v1/address/{{address}}/employee/{{id_employee}}/branchOffice/",
 					"protocol": "{{protocol}}",
 					"host": [
 						"{{host}}"
@@ -61,6 +51,8 @@
 					"path": [
 						"{{api}}",
 						"v1",
+						"address",
+						"{{address}}",
 						"employee",
 						"{{id_employee}}",
 						"branchOffice",

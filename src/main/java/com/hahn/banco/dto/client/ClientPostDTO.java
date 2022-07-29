@@ -15,13 +15,12 @@ public class ClientPostDTO {
 	private String document;
 	private String telephone;
 	private Date birthdate;
-	private Long address;
 
 	
 	public ClientPostDTO() {
 	}
 	public ClientPostDTO(String username, String password, String email, String name, String surname,
-			DocumentType documentType, String document, String telephone, Date birthdate, Long address) {
+			DocumentType documentType, String document, String telephone, Date birthdate) {
 		this.username = username;
 		this.password = password;
 		this.email = email;
@@ -31,7 +30,6 @@ public class ClientPostDTO {
 		this.document = document;
 		this.telephone = telephone;
 		this.birthdate = birthdate;
-		this.address = address;
 	}
 
 	
@@ -89,10 +87,11 @@ public class ClientPostDTO {
 	public void setBirthdate(Date birthdate) {
 		this.birthdate = birthdate;
 	}
-	public Long getAddress() {
-		return address;
-	}
-	public void setAddress(Long address) {
-		this.address = address;
+
+	@Override
+    public String toString() {
+		return "ClientPostDTO{ username=" + username + ", password=" + password + ", email=" + email + ", name=" + name
+				+ ", surname=" + surname + ", documentType=" + documentType + ", document=" + document
+				+ ", telephone=" + telephone + ", birthdate=" + birthdate + "}";
 	}
 }

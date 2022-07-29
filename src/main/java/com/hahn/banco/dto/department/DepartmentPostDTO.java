@@ -17,4 +17,9 @@ public class DepartmentPostDTO {
 		this.name = name;
 	}
 
+	@Override
+    public String toString() {
+		return "DepartmentPostDTO{ name=" + name + "}";
+	}
+
 }

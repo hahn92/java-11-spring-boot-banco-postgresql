@@ -17,4 +17,9 @@ public class RolePostDTO {
 		this.name = name;
 	}
 
+	@Override
+    public String toString() {
+		return "RolePostDTO{ name=" + name + "}";
+	}
+
 }

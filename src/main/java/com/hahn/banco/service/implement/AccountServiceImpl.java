@@ -80,7 +80,7 @@ public class AccountServiceImpl implements IAccountService{
     public Account toEntity (AccountPostDTO accountDTO, Long id_client, Long id_branchOffice) {
         LOGGER.debug("+++ AccountServiceImpl:toEntity: "+accountDTO.toString());
         BranchOfficeDTO branchOfficeDTOP = branchOfficeServiceImpl.getById(id_branchOffice).get();
-        BranchOffice branchOffice = branchOfficeServiceImpl.toEntity(branchOfficeDTOP, branchOfficeDTOP.getEmployee().getId());
+        BranchOffice branchOffice = branchOfficeServiceImpl.toEntity(branchOfficeDTOP, branchOfficeDTOP.getAddress().getId(), branchOfficeDTOP.getEmployee().getId());
         LOGGER.debug("+++ AccountServiceImpl:toEntity: "+branchOffice.toString());
         ClientDTO clientDTO = clientServiceImpl.getById(id_client).get();
         Client client = clientServiceImpl.toEntity(clientDTO, clientDTO.getAddress().getId());
@@ -91,7 +91,7 @@ public class AccountServiceImpl implements IAccountService{
     public Account toEntity (AccountDTO accountDTO, Long id_client, Long id_branchOffice) {
         LOGGER.debug("+++ AccountServiceImpl:toEntity: "+accountDTO.toString());
         BranchOfficeDTO branchOfficeDTOP = branchOfficeServiceImpl.getById(id_branchOffice).get();
-        BranchOffice branchOffice = branchOfficeServiceImpl.toEntity(branchOfficeDTOP, branchOfficeDTOP.getEmployee().getId());
+        BranchOffice branchOffice = branchOfficeServiceImpl.toEntity(branchOfficeDTOP, branchOfficeDTOP.getAddress().getId(), branchOfficeDTOP.getEmployee().getId());
         LOGGER.debug("+++ AccountServiceImpl:toEntity: "+branchOffice.toString());
         ClientDTO clientDTO = clientServiceImpl.getById(id_client).get();
         Client client = clientServiceImpl.toEntity(clientDTO, clientDTO.getAddress().getId());
