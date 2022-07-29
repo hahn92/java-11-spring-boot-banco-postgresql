@@ -26,7 +26,7 @@ public class Operation extends Audit{
     private Transaction transaction;
 	
     @Enumerated(EnumType.STRING)
-	@Column(name="operationType", length=2)
+	@Column(name="operationType", nullable=false, length=20)
 	private OperationType operationType;
 	
     @Column(name="balance", nullable=false, length=20)

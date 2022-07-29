@@ -14,8 +14,10 @@ import com.hahn.banco.dto.operation.OperationDTO;
 import com.hahn.banco.dto.operation.OperationPostDTO;
 import com.hahn.banco.dto.transaction.TransactionDTO;
 import com.hahn.banco.dto.transaction.TransactionPostDTO;
+import com.hahn.banco.entity.Account;
 import com.hahn.banco.entity.Client;
 import com.hahn.banco.entity.Operation;
+import com.hahn.banco.entity.Transaction;
 import com.hahn.banco.entity.constant.AccountType;
 import com.hahn.banco.entity.constant.OperationType;
 import com.hahn.banco.repository.OperationRepository;
@@ -56,6 +58,20 @@ public class OperationServiceImpl implements IOperationService{
         LOGGER.debug("--- OperationServiceImpl:getById: No existe la ciudad con id: "+id);
         return null;
     }
+
+    @Override
+    public OperationDTO save(OperationDTO newOperation) {
+        // TODO Auto-generated method stub
+        Operation operation = this.toEntity(newOperation); 
+        LOGGER.debug("+++ OperationServiceImpl:save: "+operation.toString());
+        return this.toDTO(operationRepository.save(operation));
+    }    
+
+    public Operation save(Operation newOperation) {
+        // TODO Auto-generated method stub
+        LOGGER.debug("+++ OperationServiceImpl:save: "+newOperation.toString());
+        return operationRepository.save(newOperation);
+    }   
 
     @Override
     @Transactional(rollbackOn = Exception.class)
@@ -152,6 +168,7 @@ public class OperationServiceImpl implements IOperationService{
         Double newBalance1 = account1.getBalance() + amount;
         LOGGER.debug("+++ OperationServiceImpl:newBalance1: "+newBalance1);
         operation1.setBalance(newBalance1);
+        this.save(operation1);
         accountServiceImpl.update(operation1.getBalance(), operation1.getAccount().getId());
 
 
@@ -169,9 +186,17 @@ public class OperationServiceImpl implements IOperationService{
 
     
     public OperationDTO toDTO(Operation operation) {
-        LOGGER.debug("+++ RoleServiceImpl:toDTO: "+operation.toString());
+        LOGGER.debug("+++ OperationServiceImpl:toDTO: "+operation.toString());
         return new OperationDTO(operation.getId(), accountServiceImpl.toDTO(operation.getAccount(), operation.getAccount().getClient().getId(), operation.getAccount().getBranchOffice().getId()), transactionServiceImpl.toDTO(operation.getTransaction()), operation.getOperationType(), operation.getBalance(), operation.getAmount(), operation.getDescription(), operation.getState());
     }
-    
+
+    public Operation toEntity (OperationDTO operationDTO) {
+        LOGGER.debug("+++ OperationServiceImpl:toEntity: "+operationDTO.toString());
+        Account account = accountServiceImpl.toEntity(operationDTO.getAccount(), operationDTO.getAccount().getClient().getId(), operationDTO.getAccount().getBranchOffice().getId());
+        Transaction transaction = transactionServiceImpl.toEntity(operationDTO.getTransaction());
+        return new Operation(account, transaction, operationDTO.getOperationType(), operationDTO.getBalance(), operationDTO.getAmount(), operationDTO.getDescription());   
+    }
+
+
 
 }
