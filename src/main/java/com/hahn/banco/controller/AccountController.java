@@ -1,5 +1,6 @@
 package com.hahn.banco.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -45,13 +46,24 @@ public class AccountController {
 		}
 	}
 
-	@GetMapping("client/{id}/account/")
+	@GetMapping("client/{id}/account/balance/")
 	public ResponseEntity<Double> BalanceGetById(@PathVariable Long id) {
 		LOGGER.debug("+++ BalanceGetById: "+id);
 		try {
-			return new ResponseEntity<>(iAccountService.getBalanceById(id), HttpStatus.OK);
+			return new ResponseEntity<>(iAccountService.getBalanceByClientId(id), HttpStatus.OK);
 		} catch (Exception e) {
 			LOGGER.error("BalanceGetById: "+e.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping("client/{id}/account/")
+	public ResponseEntity<List<AccountDTO>> AccountGetByClientId(@PathVariable Long id) {
+		LOGGER.debug("+++ AccountGetByClientId: "+id);
+		try {
+			return new ResponseEntity<>(iAccountService.getAccountByClientId(id), HttpStatus.OK);
+		} catch (Exception e) {
+			LOGGER.error("AccountGetByClientId: "+e.getMessage());
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

@@ -1,5 +1,6 @@
 package com.hahn.banco.service.implement;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,15 +53,27 @@ public class AccountServiceImpl implements IAccountService{
     }
 
     @Override
-    public Double getBalanceById(Long id) {
+    public List<AccountDTO> getAccountByClientId(Long id) {
+        // TODO Auto-generated method stub
+        List<Account> accounts = accountRepository.findByClientId(id);
+        List<AccountDTO> accountDTOs = new ArrayList<>();
+        for (Account a : accounts) {
+            accountDTOs.add(this.toDTO(a, a.getClient().getId(), a.getBranchOffice().getId()));
+        }
+        LOGGER.debug("+++ AccountServiceImpl:getAccountByClientId: "+ id);
+        return accountDTOs;
+    }
+
+    @Override
+    public Double getBalanceByClientId(Long id) {
         // TODO Auto-generated method stub
         List<Account> accounts = accountRepository.findByClientId(id);
         Double balance = 0.0;
         for (Account a : accounts) {
-            LOGGER.debug("+++ AccountServiceImpl:getBalanceById: ["+a.getBalance()+"]-[" + a.getAccountNumber()+"]");
+            LOGGER.debug("+++ AccountServiceImpl:getBalanceByClientId: ["+a.getBalance()+"]-[" + a.getAccountNumber()+"]");
             balance += a.getBalance();
         }
-        LOGGER.debug("+++ AccountServiceImpl:getBalanceById: "+balance+" " + id);
+        LOGGER.debug("+++ AccountServiceImpl:getBalanceByClientId: "+balance+" " + id);
         return balance;
     }
 
@@ -112,6 +125,5 @@ public class AccountServiceImpl implements IAccountService{
         LOGGER.debug("+++ AccountServiceImpl:toEntity: "+client.toString());
         return new Account(accountDTO.getId(), branchOffice, client, accountDTO.getAccountNumber(), accountDTO.getBalance(), accountDTO.getBeginBalance(), accountDTO.getAccountType()); 
     }
-
 
 }

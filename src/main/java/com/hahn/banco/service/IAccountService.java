@@ -1,5 +1,6 @@
 package com.hahn.banco.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.hahn.banco.dto.account.AccountDTO;
@@ -11,6 +12,8 @@ public interface IAccountService {
 
     AccountDTO save(AccountPostDTO newAccount, Long id_user, Long id_bank);
 
-    Double getBalanceById(Long id);
+    Double getBalanceByClientId(Long id);
+
+    List<AccountDTO> getAccountByClientId(Long id);
     
 }
