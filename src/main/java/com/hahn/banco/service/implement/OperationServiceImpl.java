@@ -91,10 +91,11 @@ public class OperationServiceImpl implements IOperationService{
     TODO: Implementar metodo para tranfrerencia entre cuentas
     Verifica el tipo de cuenta y la edad del cliente para realizar la transaccion aplicando las reglas del negocio
     * TRANSFERENCIA:
-        * CUENTA DE AHORRO: Si es menor de 18 años debe tener un saldo minimo de $10.000.00
-        * CUENTA CORRIENTE: Pueden tener sobrejiros hasta de $100.000.00
-    * CONSIGNACIÓN: Tranferencia de fondos de una cuenta de una entidad a una cuenta personal
+    * CONSIGNACIÓN: Tranferencia de fondos a una cuenta personal
     * DIVISAS: Tranfiente fondos en dolares a una cuenta personal y tranforma el monto a pesos segun el tipo de cambio del dia
+    * RETIRO: Retiro de fondos a una cuenta personal
+        * CUENTA DE AHORRO: Si es menor de 18 años debe mantener un saldo minimo de $10.000.00
+        * CUENTA CORRIENTE: Pueden tener sobregiros hasta de $100.000.00
     Autor: Holman Hernández
     */
     @Override
@@ -104,29 +105,18 @@ public class OperationServiceImpl implements IOperationService{
         LOGGER.debug("+++ OperationServiceImpl:operation: "+transaction.toString());
         AccountDTO account1 = accountServiceImpl.getById(id_account1).get(); 
         LOGGER.debug("+++ OperationServiceImpl:operation: "+id_account1.toString());
-        AccountDTO account2 = accountServiceImpl.getById(id_account2).get(); 
-        LOGGER.debug("+++ OperationServiceImpl:operation: "+id_account1.toString());
 
         LOGGER.debug("+++ OperationServiceImpl:operation: " +newOperation.getOperationType());
-        if(newOperation.getOperationType() == OperationType.TRANSFERENCIA) {
-            if (account2.getAccountType() == AccountType.AHORROS){
-                LOGGER.debug("+++ OperationServiceImpl:operation: AHORROS");
-                Client client2 = clientServiceImpl.toEntity(account2.getClient(), account2.getClient().getAddress().getId());
-                if ((account2.getBalance() > newOperation.getAmount() && client2.idOfAge()) || ((account2.getBalance() - 10000) > newOperation.getAmount())) {
-                    return this.Transferencia(account1, account2, newOperation.getAmount(), newOperation.getDescription(), transaction.getId(), newOperation.getOperationType());
-                }else{
-                    return false;
-                }
-            } if ((account2.getBalance() + 100000) > newOperation.getAmount()) {
-                LOGGER.debug("+++ OperationServiceImpl:operation: CORRIENTE");
-                return this.Transferencia(account1, account2, newOperation.getAmount(), newOperation.getDescription(), transaction.getId(), newOperation.getOperationType());
-            }else {
-                return false;
-            }
+        if (newOperation.getOperationType() == OperationType.TRANSFERENCIA){
+            AccountDTO account2 = accountServiceImpl.getById(id_account2).get(); 
+            LOGGER.debug("+++ OperationServiceImpl:operation: "+id_account1.toString());
+            return this.Transferencia(account1, account2, newOperation.getAmount(), newOperation.getDescription(), transaction.getId(), newOperation.getOperationType());
+        }else if (newOperation.getOperationType() == OperationType.RETIRO){
+            return this.Retiro(account1, newOperation.getAmount(), newOperation.getDescription(), transaction.getId(), account1.getAccountType(), newOperation.getOperationType());
         }else if (newOperation.getOperationType() == OperationType.CONSIGNACIÓN){
-            return this.Consignacion(account1, account2, newOperation.getAmount(), newOperation.getDescription(), transaction.getId(), newOperation.getOperationType());
+            return this.Consignacion(account1, newOperation.getAmount(), newOperation.getDescription(), transaction.getId(), newOperation.getOperationType());
         }else if (newOperation.getOperationType() == OperationType.DIVISAS){
-            return  this.Divisas(account1, account2, newOperation.getAmount(), newOperation.getDescription(), transaction.getId(), newOperation.getOperationType());
+            return  this.Divisas(account1, newOperation.getAmount(), newOperation.getDescription(), transaction.getId(), newOperation.getOperationType());
         }else {
             return false;
         }
@@ -148,31 +138,53 @@ public class OperationServiceImpl implements IOperationService{
     
     /* 
     TODO: Metodo consignar a una cuenta personal
-    retira de la cuenta 2 (Entidad) el monto de la operacion y agrega a la cuenta 1
+    Agrega el monto de la operacion a la cuenta 
     Autor: Holman Hernández
     */
-    private boolean Consignacion(AccountDTO account1, AccountDTO account2, Double amount, String description, Long id_transaction, OperationType operationType) {
-        LOGGER.debug("+++ OperationServiceImpl:Consignacion: "+account1.toString()+" "+account2.toString());
+    private boolean Consignacion(AccountDTO account1, Double amount, String description, Long id_transaction, OperationType operationType) {
+        LOGGER.debug("+++ OperationServiceImpl:Consignacion: "+account1.toString());
         Operation operation1 = new Operation();
-        Operation operation2 = new Operation();
         operation1.setAccount(accountServiceImpl.toEntity(account1, account1.getClient().getId(), account1.getBranchOffice().getId()));
-        operation2.setAccount(accountServiceImpl.toEntity(account2, account1.getClient().getId(), account1.getBranchOffice().getId()));
-        return TranfrerenciaEntreCuentas(operation1, account1, operation2, account2, amount, description, id_transaction, operationType);
+        return OperacionEnCuenta(operation1, account1, amount, description, id_transaction, operationType);
+    }
+
+    /* 
+    TODO: Metodo retiro de una cuenta personal
+    Retira el monto de la operacion en la cuenta 
+    Autor: Holman Hernández
+    */
+    private boolean Retiro(AccountDTO account, Double amount, String description, Long id_transaction, AccountType accountType, OperationType operationType) {
+        Operation operation = new Operation();
+        operation.setAccount(accountServiceImpl.toEntity(account, account.getClient().getId(), account.getBranchOffice().getId()));
+        LOGGER.debug("+++ OperationServiceImpl:Retiro: "+account.toString());
+
+        if (accountType == AccountType.AHORROS){
+            LOGGER.debug("+++ OperationServiceImpl:operation: AHORROS");
+            Client client = clientServiceImpl.toEntity(account.getClient(), account.getClient().getAddress().getId());
+            if ((account.getBalance() > amount && client.idOfAge()) || ((account.getBalance() - 10000) > amount)) {
+                return this.OperacionEnCuenta(operation, account, (amount * -1), description, id_transaction, operationType);
+            }else{
+                return false;
+            }
+        } if ((account.getBalance() + 100000) > amount) {
+            LOGGER.debug("+++ OperationServiceImpl:operation: CORRIENTE");
+            return this.OperacionEnCuenta(operation, account, (amount * -1), description, id_transaction, operationType);
+        }else {
+            return false;
+        }
     }
 
     /* 
     TODO: Metodo para convertir divisas a pesos
-    retira de la cuenta 2 el monto de la operacion y agrega a la cuenta 1
+    Convierte la divisa y agrega el monto de la operacion a la cuenta 
     Autor: Holman Hernández
     */
-    private boolean Divisas(AccountDTO account1, AccountDTO account2, Double amount, String description, Long id_transaction, OperationType operationType) {
+    private boolean Divisas(AccountDTO account1, Double amount, String description, Long id_transaction, OperationType operationType) {
         Double newAmmoun = TRM*amount;
-        LOGGER.debug("+++ OperationServiceImpl:Divisas: "+account1.toString()+" "+account2.toString());
+        LOGGER.debug("+++ OperationServiceImpl:Divisas: "+account1.toString());
         Operation operation1 = new Operation();
-        Operation operation2 = new Operation();
         operation1.setAccount(accountServiceImpl.toEntity(account1, account1.getClient().getId(), account1.getBranchOffice().getId()));
-        operation2.setAccount(accountServiceImpl.toEntity(account2, account1.getClient().getId(), account1.getBranchOffice().getId()));
-        return TranfrerenciaEntreCuentas(operation1, account1, operation2, account2, newAmmoun, description, id_transaction, operationType);
+        return OperacionEnCuenta(operation1, account1, newAmmoun, description, id_transaction, operationType);
     }
 
     /* 
@@ -204,6 +216,28 @@ public class OperationServiceImpl implements IOperationService{
         operation2.setBalance(newBalance2);
         this.save(operation2);
         accountServiceImpl.update(operation2.getBalance(), operation2.getAccount().getId());
+
+        return true;
+    }
+
+    /* 
+    TODO: Implementar metodo para operacion en una cuenta
+    Modifica el monto de la operacion en la cuenta
+    Autor: Holman Hernández
+    */
+    private boolean OperacionEnCuenta(Operation operation1, AccountDTO account1, Double amount, String description, Long id_transaction, OperationType operationType) {
+        LOGGER.debug("+++ OperationServiceImpl:OperacionEnCuenta: "+operation1.toString());
+        LOGGER.debug("+++ OperationServiceImpl:OperacionEnCuenta: "+account1.toString());
+        
+        operation1.setAmount(amount);
+        operation1.setDescription(description);
+        operation1.setTransaction(transactionServiceImpl.toEntity(transactionServiceImpl.getById(id_transaction).get()));
+        operation1.setOperationType(operationType);
+        Double newBalance1 = account1.getBalance() + amount;
+        LOGGER.debug("+++ OperationServiceImpl:newBalance1: "+newBalance1);
+        operation1.setBalance(newBalance1);
+        this.save(operation1);
+        accountServiceImpl.update(operation1.getBalance(), operation1.getAccount().getId());
 
         return true;
     }

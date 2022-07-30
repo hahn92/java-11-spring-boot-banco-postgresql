@@ -61,5 +61,16 @@ public class OperationController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+	@PostMapping("client/{id_client}/operation/")
+	public ResponseEntity<Boolean> OperationCreate(@PathVariable Long id_client, @Valid OperationPostDTO newOperation) {
+		LOGGER.debug("+++ OperationCreate: "+newOperation.toString());
+		try {
+			return new ResponseEntity<>(iOperationService.operation(newOperation, id_client, 1L), HttpStatus.OK);
+		}catch (Exception e){
+			LOGGER.error("Rollback error registro Operacion: "+e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 	
 }
