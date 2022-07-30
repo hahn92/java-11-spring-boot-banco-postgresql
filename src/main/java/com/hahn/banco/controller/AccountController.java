@@ -45,6 +45,17 @@ public class AccountController {
 		}
 	}
 
+	@GetMapping("client/{id}/account/")
+	public ResponseEntity<Double> BalanceGetById(@PathVariable Long id) {
+		LOGGER.debug("+++ BalanceGetById: "+id);
+		try {
+			return new ResponseEntity<>(iAccountService.getBalanceById(id), HttpStatus.OK);
+		} catch (Exception e) {
+			LOGGER.error("BalanceGetById: "+e.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	@PostMapping("client/{id_client}/branchOffice/{id_branchOffice}/account/")
 	public ResponseEntity<AccountDTO> AccountSave(@PathVariable Long id_client, @PathVariable Long id_branchOffice, @Valid AccountPostDTO newAccount) {
 		LOGGER.debug("+++ AccountSave: "+newAccount.toString());

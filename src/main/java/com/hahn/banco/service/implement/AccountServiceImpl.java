@@ -1,5 +1,6 @@
 package com.hahn.banco.service.implement;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -48,6 +49,19 @@ public class AccountServiceImpl implements IAccountService{
         }
         LOGGER.debug("--- AccountServiceImpl:getById: No existe la ciudad con id: "+id);
         return null;
+    }
+
+    @Override
+    public Double getBalanceById(Long id) {
+        // TODO Auto-generated method stub
+        List<Account> accounts = accountRepository.findByClientId(id);
+        Double balance = 0.0;
+        for (Account a : accounts) {
+            LOGGER.debug("+++ AccountServiceImpl:getBalanceById: ["+a.getBalance()+"]-[" + a.getAccountNumber()+"]");
+            balance += a.getBalance();
+        }
+        LOGGER.debug("+++ AccountServiceImpl:getBalanceById: "+balance+" " + id);
+        return balance;
     }
 
     @Override
