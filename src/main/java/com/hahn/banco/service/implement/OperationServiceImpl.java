@@ -69,7 +69,7 @@ public class OperationServiceImpl implements IOperationService{
         for (Operation op : operations) {
             operationDTOs.add(this.toDTO(op));
         }
-        LOGGER.debug("+++ getOperationByAccountId:getOperationByUserId: "+ id);
+        LOGGER.debug("+++ getOperationByAccountId:getOperationByAccountId: "+ id);
         return operationDTOs;
     }
 

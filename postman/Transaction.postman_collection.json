@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "Create Transaction",
+			"name": "Create Tranferencia",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -36,7 +36,7 @@
 						},
 						{
 							"key": "operationType",
-							"value": "CREDITO",
+							"value": "TRANSFERENCIA",
 							"type": "text"
 						}
 					]
@@ -55,6 +55,159 @@
 						"{{id_account1}}",
 						"client",
 						"{{id_account2}}",
+						"operation",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Consignacion en pesos",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "amount",
+							"value": "10000",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "Consignacion desde punto fisico",
+							"type": "text"
+						},
+						{
+							"key": "operationType",
+							"value": "CONSIGNACIÓN",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/{{api}}/v1/client/{{id_account1}}/client/{{id_account3}}/operation/",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{api}}",
+						"v1",
+						"client",
+						"{{id_account1}}",
+						"client",
+						"{{id_account3}}",
+						"operation",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Consignacion en dolares",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "amount",
+							"value": "500",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "Transacion en dolares",
+							"type": "text"
+						},
+						{
+							"key": "operationType",
+							"value": "DIVISAS",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/{{api}}/v1/client/{{id_account1}}/client/{{id_account3}}/operation/",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{api}}",
+						"v1",
+						"client",
+						"{{id_account1}}",
+						"client",
+						"{{id_account3}}",
+						"operation",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Operations By User ID",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/{{api}}/v1/account/{{id_account1}}/operation/",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{api}}",
+						"v1",
+						"account",
+						"{{id_account1}}",
 						"operation",
 						""
 					]

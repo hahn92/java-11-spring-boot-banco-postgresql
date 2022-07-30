@@ -51,12 +51,12 @@
 						},
 						{
 							"key": "accountNumber",
-							"value": "{{accountNumber2}}",
+							"value": "{{accountNumber1}}",
 							"type": "text"
 						},
 						{
 							"key": "accountType",
-							"value": "{{accountType2}}",
+							"value": "{{accountType1}}",
 							"type": "text"
 						}
 					]
@@ -75,6 +75,89 @@
 						"{{user_id}}",
 						"branchOffice",
 						"{{id_branchOffice}}",
+						"account",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Balance By ID",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/{{api}}/v1/client/{{user_id}}/account/balance/",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{api}}",
+						"v1",
+						"client",
+						"{{user_id}}",
+						"account",
+						"balance",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Accounts by User ID",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/{{api}}/v1/client/{{user_id}}/account/",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{api}}",
+						"v1",
+						"client",
+						"{{user_id}}",
 						"account",
 						""
 					]
