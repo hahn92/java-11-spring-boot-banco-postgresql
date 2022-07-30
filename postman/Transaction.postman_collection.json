@@ -98,7 +98,7 @@
 					]
 				},
 				"url": {
-					"raw": "{{protocol}}://{{host}}:{{port}}/{{api}}/v1/client/{{id_account1}}/client/{{id_account3}}/operation/",
+					"raw": "{{protocol}}://{{host}}:{{port}}/{{api}}/v1/client/{{id_account1}}/operation/",
 					"protocol": "{{protocol}}",
 					"host": [
 						"{{host}}"
@@ -109,8 +109,6 @@
 						"v1",
 						"client",
 						"{{id_account1}}",
-						"client",
-						"{{id_account3}}",
 						"operation",
 						""
 					]
@@ -143,7 +141,7 @@
 						},
 						{
 							"key": "description",
-							"value": "Transacion en dolares",
+							"value": "Consignacion en dolares",
 							"type": "text"
 						},
 						{
@@ -154,7 +152,7 @@
 					]
 				},
 				"url": {
-					"raw": "{{protocol}}://{{host}}:{{port}}/{{api}}/v1/client/{{id_account1}}/client/{{id_account3}}/operation/",
+					"raw": "{{protocol}}://{{host}}:{{port}}/{{api}}/v1/client/{{id_account1}}/operation/",
 					"protocol": "{{protocol}}",
 					"host": [
 						"{{host}}"
@@ -165,8 +163,60 @@
 						"v1",
 						"client",
 						"{{id_account1}}",
+						"operation",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Retiro",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "amount",
+							"value": "90000",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "Retiro en punto",
+							"type": "text"
+						},
+						{
+							"key": "operationType",
+							"value": "RETIRO",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{protocol}}://{{host}}:{{port}}/{{api}}/v1/client/{{id_account1}}/operation/",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"{{api}}",
+						"v1",
 						"client",
-						"{{id_account3}}",
+						"{{id_account1}}",
 						"operation",
 						""
 					]
