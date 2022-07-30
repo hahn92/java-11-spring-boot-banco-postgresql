@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.util.List;
 import java.util.Optional;
 
 
@@ -34,6 +36,17 @@ public class OperationController {
 			return new ResponseEntity<>(iOperationService.getById(id), HttpStatus.OK);
 		} catch (Exception e) {
 			LOGGER.error("OperationGetById: "+e.getMessage());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping("account/{id}/operation/")
+	public ResponseEntity<List<OperationDTO>> OperationGetByUserId(@PathVariable Long id) {
+		LOGGER.debug("+++ OperationGetByUserId: "+id);
+		try {
+			return new ResponseEntity<>(iOperationService.getOperationByAccountId(id), HttpStatus.OK);
+		} catch (Exception e) {
+			LOGGER.error("OperationGetByUserId: "+e.getMessage());
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

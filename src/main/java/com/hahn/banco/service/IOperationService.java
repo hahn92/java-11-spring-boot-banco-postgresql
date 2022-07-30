@@ -1,5 +1,6 @@
 package com.hahn.banco.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.hahn.banco.dto.operation.OperationDTO;
@@ -12,5 +13,7 @@ public interface IOperationService {
     OperationDTO save(OperationDTO newOperation);
 
     Boolean operation(OperationPostDTO newOperation, Long id_origin, Long id_destiny);
+
+    List<OperationDTO> getOperationByAccountId(Long id);
     
 }

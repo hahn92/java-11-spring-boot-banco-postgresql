@@ -1,5 +1,7 @@
 package com.hahn.banco.service.implement;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -57,6 +59,18 @@ public class OperationServiceImpl implements IOperationService{
         }
         LOGGER.debug("--- OperationServiceImpl:getById: No existe la ciudad con id: "+id);
         return null;
+    }
+
+    @Override
+    public List<OperationDTO> getOperationByAccountId(Long id) {
+        // TODO Auto-generated method stub
+        List<Operation> operations = operationRepository.findTop5ByAccountId(id);
+        List<OperationDTO> operationDTOs = new ArrayList<>();
+        for (Operation op : operations) {
+            operationDTOs.add(this.toDTO(op));
+        }
+        LOGGER.debug("+++ getOperationByAccountId:getOperationByUserId: "+ id);
+        return operationDTOs;
     }
 
     @Override
@@ -206,7 +220,5 @@ public class OperationServiceImpl implements IOperationService{
         Transaction transaction = transactionServiceImpl.toEntity(operationDTO.getTransaction());
         return new Operation(account, transaction, operationDTO.getOperationType(), operationDTO.getBalance(), operationDTO.getAmount(), operationDTO.getDescription());   
     }
-
-
 
 }
