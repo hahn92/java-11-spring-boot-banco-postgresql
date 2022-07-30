@@ -18,6 +18,7 @@ import com.hahn.banco.dto.client.ClientDTO;
 import com.hahn.banco.entity.Account;
 import com.hahn.banco.entity.BranchOffice;
 import com.hahn.banco.entity.Client;
+import com.hahn.banco.entity.constant.AccountType;
 import com.hahn.banco.repository.AccountRepository;
 import com.hahn.banco.service.IAccountService;
 
@@ -83,6 +84,11 @@ public class AccountServiceImpl implements IAccountService{
         // TODO Auto-generated method stub
         Account account = this.toEntity(newAccount, id_client, id_branchOffice);
         LOGGER.debug("+++ AccountServiceImpl:save: "+account.toString());
+        LOGGER.debug("+++ Es mayor: "+account.getClient().idOfAge());
+        if (!account.getClient().idOfAge() && account.getAccountType() == AccountType.CORRIENTE) {
+            LOGGER.debug("--- AccountServiceImpl:save: No se puede crear una cuenta CORRIENTE para un cliente menor de edad");
+            return null;
+        }
         return this.toDTO(accountRepository.save(account), id_client, id_branchOffice);
     }
 

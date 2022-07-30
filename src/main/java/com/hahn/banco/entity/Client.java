@@ -2,7 +2,7 @@ package com.hahn.banco.entity;
 
 import java.sql.Date;
 import java.util.ArrayList;
-// import java.util.Calendar;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -96,10 +96,12 @@ public class Client extends Person {
 	}
 
 	public boolean idOfAge() {
-		// Calendar calendar = Calendar.getInstance();
-		// calendar.setTime(getBirthdate());
-		// return calendar.get(Calendar.YEAR) >= 18;
-		return this.getBirthdate().getYear() + 1900 >= 18;
+		Calendar calendar = Calendar.getInstance();
+		Calendar calendarNow = Calendar.getInstance();
+		calendar.setTime(getBirthdate());
+		calendarNow.setTime(new Date(System.currentTimeMillis()));
+		int age = calendarNow.get(Calendar.YEAR) - calendar.get(Calendar.YEAR);
+		return age >= 18;
 	}
 
 }
