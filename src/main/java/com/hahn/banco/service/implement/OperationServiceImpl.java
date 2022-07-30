@@ -73,10 +73,19 @@ public class OperationServiceImpl implements IOperationService{
         return operationRepository.save(newOperation);
     }   
 
+    /* 
+    TODO: Implementar metodo para tranfrerencia entre cuentas
+    Verifica el tipo de cuenta y la edad del cliente para realizar la transaccion aplicando las reglas del negocio
+    * CREDITO Y DEBITO:
+        * CUENTA DE AHORRO: Si es menor de 18 años debe tener un saldo minimo de $10.000.00
+        * CUENTA CORRIENTE: Pueden tener sobrejiros hasta de $100.000.00
+    * TRANSFERENCIA: Tranferencia de fondos de una cuenta de una entidad a una cuenta personal
+    * 
+    Autor: Holman Hernández
+    */
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Boolean operation(OperationPostDTO newOperation, Long id_account1, Long id_account2) {
-        // TODO Auto-generated method stub
         TransactionDTO transaction = transactionServiceImpl.save(new TransactionPostDTO());
         LOGGER.debug("+++ OperationServiceImpl:operation: "+transaction.toString());
         AccountDTO account1 = accountServiceImpl.getById(id_account1).get(); 
@@ -84,58 +93,40 @@ public class OperationServiceImpl implements IOperationService{
         AccountDTO account2 = accountServiceImpl.getById(id_account2).get(); 
         LOGGER.debug("+++ OperationServiceImpl:operation: "+id_account1.toString());
 
-        if(newOperation.getOperationType() == OperationType.CREDITO){
-            LOGGER.debug("+++ OperationServiceImpl:operation: "+OperationType.CREDITO);
-            return this.Credito(account1, account2, newOperation.getAmount(), newOperation.getDescription(), transaction.getId());
-        }else if (newOperation.getOperationType() == OperationType.DEBITO){
-            LOGGER.debug("+++ OperationServiceImpl:operation: "+OperationType.DEBITO);
-            return this.Debito(account1, account2, newOperation.getAmount(), newOperation.getDescription(), transaction.getId());
+        LOGGER.debug("+++ OperationServiceImpl:operation: " +newOperation.getOperationType());
+        if(newOperation.getOperationType() == OperationType.CREDITO || newOperation.getOperationType() == OperationType.DEBITO) {
+            if (account2.getAccountType() == AccountType.AHORROS){
+                LOGGER.debug("+++ OperationServiceImpl:operation: AHORROS");
+                Client client2 = clientServiceImpl.toEntity(account2.getClient(), account2.getClient().getAddress().getId());
+                if ((account2.getBalance() > newOperation.getAmount() && client2.idOfAge()) || ((account2.getBalance() - 10000) > newOperation.getAmount())) {
+                    return this.CreditoDebito(account1, account2, newOperation.getAmount(), newOperation.getDescription(), transaction.getId(), newOperation.getOperationType());
+                }else{
+                    return false;
+                }
+            } if ((account2.getBalance() + 100000) > newOperation.getAmount()) {
+                LOGGER.debug("+++ OperationServiceImpl:operation: CORRIENTE");
+                return this.CreditoDebito(account1, account2, newOperation.getAmount(), newOperation.getDescription(), transaction.getId(), newOperation.getOperationType());
+            }else {
+                return false;
+            }
         }else if (newOperation.getOperationType() == OperationType.TRANSFERENCIA){
-            LOGGER.debug("+++ OperationServiceImpl:operation: "+OperationType.TRANSFERENCIA);
             return this.Transferencia(account1, account2, newOperation.getAmount(), newOperation.getDescription(), transaction.getId());
         }else if (newOperation.getOperationType() == OperationType.USD){
-            LOGGER.debug("+++ OperationServiceImpl:operation: "+OperationType.USD);
             return  this.Divisas(account1, newOperation.getAmount(), newOperation.getDescription(), transaction.getId());
         }else {
-            LOGGER.debug("+++ OperationServiceImpl:operation: N/A: " +newOperation.getOperationType());
             return false;
         }
     }
 
-    private boolean Credito(AccountDTO account1, AccountDTO account2, Double amount, String description, Long id_transaction) {
-        // TODO Auto-generated method 
+    private boolean CreditoDebito(AccountDTO account1, AccountDTO account2, Double amount, String description, Long id_transaction, OperationType operationType) {
         LOGGER.debug("+++ OperationServiceImpl:Credito: "+account1.toString()+" "+account2.toString());
         Operation operation1 = new Operation();
         Operation operation2 = new Operation();
         operation1.setAccount(accountServiceImpl.toEntity(account1, account1.getClient().getId(), account1.getBranchOffice().getId()));
         operation2.setAccount(accountServiceImpl.toEntity(account2, account1.getClient().getId(), account1.getBranchOffice().getId()));
-        Client client2 = clientServiceImpl.toEntity(account2.getClient(), account2.getClient().getAddress().getId());
-        // Si el cliente es menor de 18 años no puede dejar mejor de $10.000 en la cuenta
-        if (account2.getAccountType() == AccountType.AHORROS){
-            LOGGER.debug("+++ OperationServiceImpl:operation: AHORROS");
-            if ((account2.getBalance() > amount && client2.idOfAge()) || ((account2.getBalance() - 10000) > amount)) {
-                return this.TranfrerenciaEntreCuentas(operation1, account1, operation2, account2, amount, description, id_transaction);
-            }else {
-                return false;
-            }
-        }else {
-            if (account2.getBalance() > amount) {
-                LOGGER.debug("+++ OperationServiceImpl:operation: CORRIENTE");
-                return this.TranfrerenciaEntreCuentas(operation1, account1, operation2, account2, amount, description, id_transaction);
-            }else {
-                return false;
-            }
-        }
-    }
-
-    private boolean Debito(AccountDTO account1, AccountDTO account2, Double amount, String description, Long id_transaction) {
-        // TODO Auto-generated method stub
-        LOGGER.debug("+++ OperationServiceImpl:Debito: "+account1.toString()+" "+account2.toString());
-        Operation operation1 = new Operation();
-        Operation operation2 = new Operation();
-        operation1.setAccount(accountServiceImpl.toEntity(account1, account1.getClient().getId(), account1.getBranchOffice().getId()));
-        operation2.setAccount(accountServiceImpl.toEntity(account2, account1.getClient().getId(), account1.getBranchOffice().getId()));
-        if (account1.getBalance() > amount) {
+        if (operationType == OperationType.CREDITO) {
+            return this.TranfrerenciaEntreCuentas(operation1, account1, operation2, account2, amount, description, id_transaction);
+        }else if (operationType == OperationType.DEBITO) {
             return this.TranfrerenciaEntreCuentas(operation2, account2, operation1, account1, amount, description, id_transaction);
         }else {
             return false;
@@ -143,21 +134,21 @@ public class OperationServiceImpl implements IOperationService{
     }
     
     private boolean Transferencia(AccountDTO account1, AccountDTO account2, Double amount, String description, Long id_transaction) {
-        // TODO Auto-generated method stub
         
         return true;
     }
     private boolean Divisas(AccountDTO account1, Double amount, String description, Long id_transaction) {
-        // TODO Auto-generated method stub
         Double newAmmoun = TRM*amount;
         
         return true;
     }
 
-    // TODO: Implementar metodo para tranfrerencia entre cuentas
-    // Operacion: Credito en cuenta 1 y Debito en cuenta 2
+    /* 
+    TODO: Implementar metodo para tranfrerencia entre cuentas
+    retira de la cuenta 2 el monto de la operacion y agrega a la cuenta 1
+    Autor: Holman Hernández
+    */
     private boolean TranfrerenciaEntreCuentas(Operation operation1, AccountDTO account1, Operation operation2, AccountDTO account2, Double amount, String description, Long id_transaction) {
-        // TODO Auto-generated method stub
         LOGGER.debug("+++ OperationServiceImpl:TranfrerenciaEntreCuentas: "+operation1.toString()+" "+operation2.toString());
         LOGGER.debug("+++ OperationServiceImpl:TranfrerenciaEntreCuentas: "+account1.toString()+" "+account2.toString());
         
