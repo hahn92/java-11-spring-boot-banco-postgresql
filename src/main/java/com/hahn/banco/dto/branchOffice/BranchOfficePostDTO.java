@@ -6,6 +6,9 @@ public class BranchOfficePostDTO {
 	private String code;
 
 	
+	public BranchOfficePostDTO() {
+		super();
+	}
 	public BranchOfficePostDTO(String name, String code) {
 		this.name = name;
 		this.code = code;

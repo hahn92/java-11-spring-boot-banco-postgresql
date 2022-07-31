@@ -11,6 +11,9 @@ public class CityDTO {
 	private StateType state;
 
 	
+	public CityDTO() {
+		super();
+	}
 	public CityDTO(long id, DepartmentDTO department, String name, StateType state) {
 		this.id = id;
 		this.department = department;

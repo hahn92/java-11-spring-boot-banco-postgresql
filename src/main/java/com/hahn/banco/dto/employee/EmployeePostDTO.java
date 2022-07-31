@@ -14,6 +14,9 @@ public class EmployeePostDTO {
 	private Date birthdate;
 
 
+	public EmployeePostDTO() {
+		super();
+	}
 	public EmployeePostDTO(String name, String surname, DocumentType documentType, String document, String telephone,
 			Date birthdate) {
 		this.name = name;

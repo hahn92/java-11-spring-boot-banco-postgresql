@@ -5,6 +5,9 @@ public class DepartmentPostDTO {
 	private String name;
 
 	
+	public DepartmentPostDTO() {
+		super();
+	}
 	public DepartmentPostDTO(String name) {
 		this.name = name;
 	}

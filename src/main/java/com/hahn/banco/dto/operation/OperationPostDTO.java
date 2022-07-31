@@ -10,6 +10,9 @@ public class OperationPostDTO {
 	private String description;
 	
 	
+	public OperationPostDTO() {
+		super();
+	}
 	public OperationPostDTO(OperationType operationType, Double balance, Double amount, String description) {
 		this.operationType = operationType;
 		this.balance = balance;

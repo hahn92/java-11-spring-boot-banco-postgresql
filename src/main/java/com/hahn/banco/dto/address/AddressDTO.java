@@ -12,6 +12,9 @@ public class AddressDTO {
 	private StateType state;
 
 	
+	public AddressDTO() {
+		super();
+	}
 	public AddressDTO(long id, CityDTO city, Boolean street, String direction, StateType state) {
 		this.id = id;
 		this.city = city;

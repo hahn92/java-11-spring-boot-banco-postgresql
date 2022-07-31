@@ -8,6 +8,9 @@ public class TransactionDTO {
 	private StateType state;
 
 	
+	public TransactionDTO() {
+		super();
+	}
 	public TransactionDTO(long id, StateType state) {
 		this.id = id;
 		this.state = state;

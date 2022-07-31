@@ -6,6 +6,9 @@ public class AddressPostDTO {
 	private String direction;
 
 	
+	public AddressPostDTO() {
+		super();
+	}
 	public AddressPostDTO(Boolean street, String direction) {
 		this.street = street;
 		this.direction = direction;

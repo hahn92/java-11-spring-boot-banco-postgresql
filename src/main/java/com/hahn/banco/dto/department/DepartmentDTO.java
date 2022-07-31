@@ -9,6 +9,9 @@ public class DepartmentDTO {
 	private StateType state;
 
 	
+	public DepartmentDTO() {
+		super();
+	}
 	public DepartmentDTO(long id, String name, StateType state) {
 		this.id = id;
 		this.name = name;

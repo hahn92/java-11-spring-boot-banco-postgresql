@@ -21,6 +21,9 @@ public class EmployeeDTO {
 	private StateType state;
 
 
+	public EmployeeDTO() {
+		super();
+	}
 	public EmployeeDTO(long id, String name, String surname, Date birthdate, String telephone,
 			DocumentType documentType, String document, AddressDTO address, RoleDTO role, StateType state) {
 		this.id = id;

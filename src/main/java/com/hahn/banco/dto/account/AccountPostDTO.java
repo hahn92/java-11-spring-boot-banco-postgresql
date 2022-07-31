@@ -10,6 +10,9 @@ public class AccountPostDTO {
 	private AccountType accountType;
 
 	
+	public AccountPostDTO() {
+		super();
+	}
 	public AccountPostDTO(String accountNumber,  Double balance, Double beginBalance, AccountType accountType) {
         this.accountNumber = accountNumber;
         this.balance = balance;

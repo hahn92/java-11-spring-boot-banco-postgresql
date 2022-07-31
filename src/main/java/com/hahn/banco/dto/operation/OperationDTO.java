@@ -17,6 +17,9 @@ public class OperationDTO {
 	private StateType state;
 
 	
+	public OperationDTO() {
+		super();
+	}
 	public OperationDTO(Long id, AccountDTO account, TransactionDTO transaction, OperationType operationType, Double balance,
 		Double amount, String description, StateType state) {
 		this.id = id;

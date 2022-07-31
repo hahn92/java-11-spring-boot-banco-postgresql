@@ -21,6 +21,9 @@ public class ClientDTO {
 	private StateType state;
 
 
+	public ClientDTO() {
+		super();
+	}
 	public ClientDTO(long id, String name, String surname, String username, String email, Date birthdate, String telephone,
 			DocumentType documentType, String document, AddressDTO address, StateType state) {
 		this.id = id;

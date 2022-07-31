@@ -5,6 +5,9 @@ public class CityPostDTO {
 	private String name;
 
 	
+	public CityPostDTO() {
+		super();
+	}
 	public CityPostDTO(String name) {
 		this.name = name;
 	}

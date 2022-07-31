@@ -18,6 +18,7 @@ public class ClientPostDTO {
 
 	
 	public ClientPostDTO() {
+		super();
 	}
 	public ClientPostDTO(String username, String password, String email, String name, String surname,
 			DocumentType documentType, String document, String telephone, Date birthdate) {

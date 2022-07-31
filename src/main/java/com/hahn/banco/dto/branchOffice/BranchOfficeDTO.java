@@ -14,6 +14,9 @@ public class BranchOfficeDTO {
 	private StateType state;
 
 	
+	public BranchOfficeDTO() {
+		super();
+	}
 	public BranchOfficeDTO(long id, String name, String code, AddressDTO address, EmployeeDTO employee, StateType state) {
 		this.id = id;
 		this.name = name;

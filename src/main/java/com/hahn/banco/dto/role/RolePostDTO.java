@@ -5,6 +5,9 @@ public class RolePostDTO {
 	private String name;
 
 	
+	public RolePostDTO() {
+		super();
+	}
 	public RolePostDTO(String name) {
 		this.name = name;
 	}

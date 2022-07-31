@@ -9,6 +9,9 @@ public class RoleDTO {
 	private StateType state;
 
 
+	public RoleDTO() {
+		super();
+	}
 	public RoleDTO(long id, String name, StateType state) {
 		this.id = id;
 		this.name = name;

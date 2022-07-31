@@ -17,6 +17,9 @@ public class AccountDTO {
 	private StateType state;
 
 	
+	public AccountDTO() {
+		super();
+	}
     public AccountDTO(Long id, BranchOfficeDTO branchOffice, ClientDTO client, String accountNumber,  Double balance, 
             Double beginBalance, AccountType accountType, StateType state) {
 		this.id = id;
