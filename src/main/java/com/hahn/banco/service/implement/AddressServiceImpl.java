@@ -4,14 +4,13 @@ import java.util.Optional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hahn.banco.dto.address.AddressDTO;
 import com.hahn.banco.dto.address.AddressPostDTO;
-import com.hahn.banco.dto.city.CityDTO;
 import com.hahn.banco.entity.Address;
-import com.hahn.banco.entity.City;
 import com.hahn.banco.repository.AddressRepository;
 import com.hahn.banco.service.IAddressService;
 
@@ -24,12 +23,14 @@ public class AddressServiceImpl implements IAddressService {
   @Autowired
   private AddressRepository addressRepository;
   @Autowired
-  private CityServiceImpl cityServiceiImpl;
+  private ModelMapper modelMapper;
 
-  public AddressServiceImpl(AddressRepository addressRepository, CityServiceImpl cityServiceiImpl) {
+
+  public AddressServiceImpl(AddressRepository addressRepository, ModelMapper modelMapper) {
     this.addressRepository = addressRepository;
-    this.cityServiceiImpl = cityServiceiImpl;
+    this.modelMapper = modelMapper;
   }
+  
 
   @Override   
   public Optional<AddressDTO> getById(Long id) {
@@ -37,7 +38,7 @@ public class AddressServiceImpl implements IAddressService {
         Address address = addressRepository.findById(id).get();
         if(address.getId() != null) {
             LOGGER.debug("+++ AddressServiceImpl:getById: "+address.toString());
-            return Optional.of(this.toDTO(address, address.getCity().getId()));
+            return Optional.of(this.toDTO(address));
         }
         LOGGER.debug("--- AddressServiceImpl:getById: No existe la direccion con id: "+id);
         return null;
@@ -46,30 +47,25 @@ public class AddressServiceImpl implements IAddressService {
   @Override
   public AddressDTO save(AddressPostDTO addressDTO, Long id_city) {
       // TODO Auto-generated method stub
-      Address address = this.toEntity(addressDTO, id_city);
+      Address address = this.toEntity(addressDTO);
       LOGGER.debug("+++ AddressServiceImpl:save: "+address.toString());
-      return this.toDTO(addressRepository.save(address), id_city);
+      return this.toDTO(addressRepository.save(address));
   }
+  
 
-  public AddressDTO toDTO(Address address, Long id_city) {
+  public AddressDTO toDTO(Address address) {
       LOGGER.debug("+++ AddressServiceImpl:toDTO: "+address.toString());
-      return new AddressDTO(address.getId(), cityServiceiImpl.getById(id_city).get(), address.getStreet(), address.getDirection(), address.getState());
+      return modelMapper.map(address, AddressDTO.class);
   }
 
-  public Address toEntity(AddressPostDTO addressDTO, Long id_city) {
+  public Address toEntity(AddressPostDTO addressDTO) {
       LOGGER.debug("+++ AddressServiceImpl:toEntity: "+addressDTO.toString());
-      CityDTO cityDTO = cityServiceiImpl.getById(id_city).get();
-      City city = cityServiceiImpl.toEntity(cityDTO, cityDTO.getDepartment().getId());
-      LOGGER.debug("+++ AddressServiceImpl:toEntity: "+city.toString());
-      return new Address(city, addressDTO.getStreet(), addressDTO.getDirection());   
+      return modelMapper.map(addressDTO, Address.class); 
   }
 
-  public Address toEntity(AddressDTO addressDTO, Long id_city) {
-      LOGGER.debug("+++ AddressServiceImpl:toEntity: "+addressDTO.toString());
-      CityDTO cityDept = cityServiceiImpl.getById(id_city).get();
-      City city = cityServiceiImpl.toEntity(cityDept, cityDept.getDepartment().getId());
-      LOGGER.debug("+++ AddressServiceImpl:toEntity: "+city.toString());
-      return new Address(addressDTO.getId(), city, addressDTO.getStreet(), addressDTO.getDirection());   
+  public Address toEntity(AddressDTO addressDTO) {
+    LOGGER.debug("+++ AddressServiceImpl:toEntity: "+addressDTO.toString());
+    return modelMapper.map(addressDTO, Address.class);  
   }
 
 }

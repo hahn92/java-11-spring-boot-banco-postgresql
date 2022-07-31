@@ -6,6 +6,7 @@ import javax.transaction.Transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +24,15 @@ public class RoleServiceImpl implements IRoleService {
 	
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private ModelMapper modelMapper;
+    
 	
-	public RoleServiceImpl(RoleRepository roleRepository) {
+	public RoleServiceImpl(RoleRepository roleRepository, ModelMapper modelMapper) {
         this.roleRepository = roleRepository;
+        this.modelMapper = modelMapper;
     }
+    
 
     @Override   
     public Optional<RoleDTO> getById(Long id) {
@@ -52,17 +58,17 @@ public class RoleServiceImpl implements IRoleService {
 
     public RoleDTO toDTO(Role role) {
         LOGGER.debug("+++ RoleServiceImpl:toDTO: "+role.toString());
-        return new RoleDTO(role.getId(), role.getName(), role.getState());
+        return modelMapper.map(role, RoleDTO.class);
     }
 
     public Role toEntity (RolePostDTO roleDTO) {
         LOGGER.debug("+++ RoleServiceImpl:toEntity: "+roleDTO.toString());
-        return new Role(roleDTO.getName());   
+        return modelMapper.map(roleDTO, Role.class);
     }
 
     public Role toEntity (RoleDTO roleDTO) {
         LOGGER.debug("+++ RoleServiceImpl:toEntity: "+roleDTO.toString());
-        return new Role(roleDTO.getId(), roleDTO.getName());   
+        return modelMapper.map(roleDTO, Role.class); 
     }
     
 

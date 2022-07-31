@@ -6,6 +6,7 @@ import javax.transaction.Transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +24,14 @@ public class DepartmentServiceImpl implements IDepartmentService {
 	
     @Autowired
     private DepartmentRepository departmentRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 	
-	public DepartmentServiceImpl(DepartmentRepository departmentRepository) {
+
+	public DepartmentServiceImpl(DepartmentRepository departmentRepository, ModelMapper modelMapper) {
         this.departmentRepository = departmentRepository;
     }
+    
 
     @Override   
     public Optional<DepartmentDTO> getById(Long id) {
@@ -52,17 +57,17 @@ public class DepartmentServiceImpl implements IDepartmentService {
 
     public DepartmentDTO toDTO(Department department) {
         LOGGER.debug("+++ DepartmentServiceImpl:toDTO: "+department.toString());
-        return new DepartmentDTO(department.getId(), department.getName(), department.getState());
+        return modelMapper.map(department, DepartmentDTO.class);
     }
 
     public Department toEntity (DepartmentPostDTO departmentDTO) {
         LOGGER.debug("+++ DepartmentServiceImpl:toEntity: "+departmentDTO.toString());
-        return new Department(departmentDTO.getName());   
+        return modelMapper.map(departmentDTO, Department.class);
     }
 
     public Department toEntity (DepartmentDTO departmentDTO) {
         LOGGER.debug("+++ DepartmentServiceImpl:toEntity: "+departmentDTO.toString());
-        return new Department(departmentDTO.getId(), departmentDTO.getName());   
+        return modelMapper.map(departmentDTO, Department.class);
     }
 
 }

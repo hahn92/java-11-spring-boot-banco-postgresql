@@ -6,6 +6,7 @@ import javax.transaction.Transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +24,15 @@ public class TransactionServiceImpl implements ITransactionService {
 	
     @Autowired
     private TransactionRepository transactionRepository;
+    @Autowired
+    private ModelMapper modelMapper;
+    
 	
-	public TransactionServiceImpl(TransactionRepository transactionRepository) {
+	public TransactionServiceImpl(TransactionRepository transactionRepository, ModelMapper modelMapper) {
         this.transactionRepository = transactionRepository;
+        this.modelMapper = modelMapper;
     }
+    
 
     @Override   
     public Optional<TransactionDTO> getById(Long id) {
@@ -52,17 +58,17 @@ public class TransactionServiceImpl implements ITransactionService {
 
     public TransactionDTO toDTO(Transaction transaction) {
         LOGGER.debug("+++ TransactionServiceImpl:toDTO: "+transaction.toString());
-        return new TransactionDTO(transaction.getId(), transaction.getState());
+        return modelMapper.map(transaction, TransactionDTO.class);
     }
 
     public Transaction toEntity (TransactionPostDTO transactionDTO) {
         LOGGER.debug("+++ TransactionServiceImpl:toEntity: "+transactionDTO.toString());
-        return new Transaction();   
+        return modelMapper.map(transactionDTO, Transaction.class);   
     }
 
     public Transaction toEntity (TransactionDTO transactionDTO) {
         LOGGER.debug("+++ TransactionServiceImpl:toEntity: "+transactionDTO.toString());
-        return new Transaction(transactionDTO.getId());   
+        return modelMapper.map(transactionDTO, Transaction.class); 
     }
 
 }
