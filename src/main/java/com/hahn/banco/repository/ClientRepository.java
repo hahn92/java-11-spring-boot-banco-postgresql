@@ -1,6 +1,5 @@
 package com.hahn.banco.repository;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -17,7 +16,5 @@ public interface ClientRepository extends PagingAndSortingRepository<Client, Int
     Optional<Client> findById(Long id);
 
     void deleteById(Long id);
-
-    List<Client> findByName(String name);
 	
 }

@@ -15,6 +15,6 @@ public interface BranchOfficeRepository extends PagingAndSortingRepository<Branc
 
     void deleteById(Long id);
 
-    List<BranchOffice> findByName(String name);
+    List<BranchOffice> findByCode(String name);
     
 }

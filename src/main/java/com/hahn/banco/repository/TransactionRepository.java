@@ -1,6 +1,5 @@
 package com.hahn.banco.repository;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -14,7 +13,5 @@ public interface TransactionRepository extends PagingAndSortingRepository<Transa
     Optional<Transaction> findById(Long id);
 
     void deleteById(Long id);
-
-    List<Transaction> findByName(String name);
     
 }

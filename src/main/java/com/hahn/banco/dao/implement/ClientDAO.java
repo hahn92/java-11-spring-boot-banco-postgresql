@@ -1,6 +1,5 @@
 package com.hahn.banco.dao.implement;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +31,6 @@ public class ClientDAO implements IClientDAO {
     @Override
     public Optional<Client> readByUsername(String name) {
         return clientRepository.findByUsername(name);
-    }
-
-    @Override
-    public List<Client> listAll(String name) {
-        return clientRepository.findByName(name);
     }
 
     @Override

@@ -81,7 +81,7 @@ public class AccountServiceImpl implements IAccountService{
     @Override
     @Transactional(rollbackOn = Exception.class)
     public AccountDTO save(AccountPostDTO newAccount, Long id_client, Long id_branchOffice) {
-        Account account = iAccountDAO.toEntity(newAccount);
+        Account account = new Account(iBranchOfficeDAO.read(id_branchOffice).get(), iClientDAO.read(id_client).get(), newAccount.getAccountNumber(), newAccount.getBalance(), newAccount.getBalance(), (newAccount.getAccountType()));
         LOGGER.debug("+++ AccountServiceImpl:save: "+account.toString());
         LOGGER.debug("+++ Es mayor: "+account.getClient().idOfAge());
         if (!account.getClient().idOfAge() && account.getAccountType() == AccountType.CORRIENTE) {

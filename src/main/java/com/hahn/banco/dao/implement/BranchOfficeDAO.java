@@ -31,7 +31,7 @@ public class BranchOfficeDAO implements IBranchOfficeDAO {
 
     @Override
     public List<BranchOffice> list(String name) {
-        return branchOfficeRepository.findByName(name);
+        return branchOfficeRepository.findByCode(name);
     }
 
     @Override

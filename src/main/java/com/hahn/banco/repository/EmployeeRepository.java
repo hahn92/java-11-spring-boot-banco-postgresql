@@ -1,6 +1,5 @@
 package com.hahn.banco.repository;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -14,7 +13,5 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
     Optional<Employee> findById(Long id);
 
     void deleteById(Long id);
-
-    List<Employee> findByName(String name);
     
 }

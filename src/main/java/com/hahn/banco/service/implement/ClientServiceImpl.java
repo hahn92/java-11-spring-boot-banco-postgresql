@@ -36,6 +36,10 @@ public class ClientServiceImpl implements UserDetailsService, IClientService {
     private IAddressDAO iAddressDAO;
 	
 
+    public ClientServiceImpl() {}
+    public ClientServiceImpl(IClientDAO iClientDAO) {
+        this.iClientDAO = iClientDAO;
+    }
 	public ClientServiceImpl(IClientDAO iClientDAO, IAddressDAO iAddressDAO) {
         this.iClientDAO = iClientDAO;
         this.iAddressDAO = iAddressDAO;

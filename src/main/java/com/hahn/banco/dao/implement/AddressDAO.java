@@ -31,7 +31,7 @@ public class AddressDAO implements IAddressDAO {
 
     @Override
     public List<Address> list(String name) {
-        return addressRepository.findByName(name);
+        return addressRepository.findByDirection(name);
     }
 
     @Override

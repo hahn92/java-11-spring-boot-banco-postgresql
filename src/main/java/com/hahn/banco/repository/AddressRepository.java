@@ -13,7 +13,7 @@ public interface AddressRepository extends PagingAndSortingRepository<Address, I
 
     Optional<Address> findById(Long id);
 
-    List<Address> findByName(String name);
+    List<Address> findByDirection(String name);
 
     void deleteById(Long id);
     

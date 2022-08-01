@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hahn.banco.dao.IAccountDAO;
+import com.hahn.banco.dao.IBranchOfficeDAO;
 import com.hahn.banco.dao.IClientDAO;
 import com.hahn.banco.dao.IOperationDAO;
 import com.hahn.banco.dao.ITransactionDAO;
@@ -42,13 +43,16 @@ public class OperationServiceImpl implements IOperationService{
     private ITransactionDAO iTransactionDAO;
     @Autowired 
     private IClientDAO iClientDAO;
+    @Autowired
+    private IBranchOfficeDAO iBranchOfficeDAO;
     
 
-    public OperationServiceImpl(IOperationDAO iOperationDAO, IAccountDAO iAccountDAO, ITransactionDAO iTransactionDAO, IClientDAO iClientDAO) {
+    public OperationServiceImpl(IOperationDAO iOperationDAO, IAccountDAO iAccountDAO, ITransactionDAO iTransactionDAO, IClientDAO iClientDAO, IBranchOfficeDAO iBranchOfficeDAO) {
         this.iOperationDAO = iOperationDAO;
         this.iAccountDAO = iAccountDAO;
         this.iTransactionDAO = iTransactionDAO;
         this.iClientDAO = iClientDAO;
+        this.iBranchOfficeDAO = iBranchOfficeDAO;
     }
 
     
@@ -156,7 +160,7 @@ public class OperationServiceImpl implements IOperationService{
     Autor: Holman Hernández
     */
     private boolean Retiro(AccountDTO account, Double amount, String description, Long id_transaction, AccountType accountType, OperationType operationType) {
-        Operation operation = new Operation();
+        Operation operation = new Operation(iAccountDAO.toEntity(account), iTransactionDAO.read(id_transaction).get(), operationType, account.getBalance(), amount, description);
         operation.setAccount(iAccountDAO.toEntity(account));
         LOGGER.debug("+++ OperationServiceImpl:Retiro: "+account.toString());
 

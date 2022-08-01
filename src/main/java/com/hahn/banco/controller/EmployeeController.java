@@ -45,7 +45,7 @@ public class EmployeeController {
 	}
 
 	@PostMapping("role/{id_role}/address/{id_address}/employee/")
-	public ResponseEntity<EmployeeDTO> EmployeeSave(@PathVariable Long id_address, @Valid EmployeePostDTO newEmployee, @PathVariable Long id_role) {
+	public ResponseEntity<EmployeeDTO> EmployeeSave(@PathVariable Long id_role, @PathVariable Long id_address, @Valid EmployeePostDTO newEmployee) {
 		LOGGER.debug("+++ EmployeeSave: "+newEmployee.toString());
 		try {
 			return new ResponseEntity<>(iEmployeeService.save(newEmployee, id_address, id_role), HttpStatus.CREATED);

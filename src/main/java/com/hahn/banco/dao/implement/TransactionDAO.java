@@ -31,7 +31,8 @@ public class TransactionDAO implements ITransactionDAO {
 
     @Override
     public List<Transaction> list(String name) {
-        return transactionRepository.findByName(name);
+        //return transactionRepository.findByName(name);
+        return null;
     }
 
     @Override
