@@ -14,5 +14,7 @@ public interface OperationRepository extends PagingAndSortingRepository<Operatio
     Optional<Operation> findById(Long id);
 
     List<Operation> findTop5ByAccountId(Long id);
+
+    void deleteById(Long id);
     
 }

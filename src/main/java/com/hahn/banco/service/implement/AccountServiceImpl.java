@@ -11,15 +11,13 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hahn.banco.dao.IAccountDAO;
+import com.hahn.banco.dao.IBranchOfficeDAO;
+import com.hahn.banco.dao.IClientDAO;
 import com.hahn.banco.dto.account.AccountDTO;
 import com.hahn.banco.dto.account.AccountPostDTO;
-import com.hahn.banco.dto.branchOffice.BranchOfficeDTO;
-import com.hahn.banco.dto.client.ClientDTO;
 import com.hahn.banco.entity.Account;
-import com.hahn.banco.entity.BranchOffice;
-import com.hahn.banco.entity.Client;
 import com.hahn.banco.entity.constant.AccountType;
-import com.hahn.banco.repository.AccountRepository;
 import com.hahn.banco.service.IAccountService;
 
 
@@ -29,25 +27,29 @@ public class AccountServiceImpl implements IAccountService{
     private static final Log LOGGER = LogFactory.getLog(AccountServiceImpl.class);
 	
     @Autowired
-    private AccountRepository accountRepository;
+    private IAccountDAO iAccountDAO;
     @Autowired
-    private ClientServiceImpl clientServiceImpl;
+    private IClientDAO iClientDAO;
     @Autowired
-    private BranchOfficeServiceImpl branchOfficeServiceImpl;
+    private IBranchOfficeDAO iBranchOfficeDAO;
 	
-    public AccountServiceImpl(AccountRepository accountRepository, ClientServiceImpl clientServiceImpl, BranchOfficeServiceImpl branchOfficeServiceImpl) {
-        this.accountRepository = accountRepository;
-        this.clientServiceImpl = clientServiceImpl;
-        this.branchOfficeServiceImpl = branchOfficeServiceImpl;
+
+    public AccountServiceImpl(IAccountDAO iAccountDAO, IClientDAO iClientDAO, IBranchOfficeDAO iBranchOfficeDAO) {
+        this.iAccountDAO = iAccountDAO;
+        this.iClientDAO = iClientDAO;
+        this.iBranchOfficeDAO = iBranchOfficeDAO;
     }
 
+    
     @Override   
     public Optional<AccountDTO> getById(Long id) {
-        // TODO Auto-generated method stub
-        Account account = accountRepository.findById(id).get();
+        Account account = iAccountDAO.read(id).get();
         if(account.getId() != null) {
             LOGGER.debug("+++ AccountServiceImpl:getById: "+account.toString());
-            return Optional.of(this.toDTO(account, account.getClient().getId(), account.getBranchOffice().getId()));
+            AccountDTO accountDTO = iAccountDAO.toDTO(account);
+            iClientDAO.read(account.getClient().getId()).ifPresent(client -> accountDTO.setClient(iClientDAO.toDTO(client)));
+            iBranchOfficeDAO.read(account.getBranchOffice().getId()).ifPresent(branchOffice -> accountDTO.setBranchOffice(iBranchOfficeDAO.toDTO(branchOffice)));
+            return Optional.of(accountDTO);
         }
         LOGGER.debug("--- AccountServiceImpl:getById: No existe la ciudad con id: "+id);
         return null;
@@ -55,11 +57,10 @@ public class AccountServiceImpl implements IAccountService{
 
     @Override
     public List<AccountDTO> getAccountByClientId(Long id) {
-        // TODO Auto-generated method stub
-        List<Account> accounts = accountRepository.findByClientId(id);
+        List<Account> accounts = iAccountDAO.list(id);
         List<AccountDTO> accountDTOs = new ArrayList<>();
-        for (Account a : accounts) {
-            accountDTOs.add(this.toDTO(a, a.getClient().getId(), a.getBranchOffice().getId()));
+        for (Account account : accounts) {
+            accountDTOs.add(iAccountDAO.toDTO(account));
         }
         LOGGER.debug("+++ AccountServiceImpl:getAccountByClientId: "+ id);
         return accountDTOs;
@@ -67,12 +68,11 @@ public class AccountServiceImpl implements IAccountService{
 
     @Override
     public Double getBalanceByClientId(Long id) {
-        // TODO Auto-generated method stub
-        List<Account> accounts = accountRepository.findByClientId(id);
+        List<Account> accounts = iAccountDAO.list(id);
         Double balance = 0.0;
-        for (Account a : accounts) {
-            LOGGER.debug("+++ AccountServiceImpl:getBalanceByClientId: ["+a.getBalance()+"]-[" + a.getAccountNumber()+"]");
-            balance += a.getBalance();
+        for (Account account : accounts) {
+            LOGGER.debug("+++ AccountServiceImpl:getBalanceByClientId: ["+account.getBalance()+"]-[" + account.getAccountNumber()+"]");
+            balance += account.getBalance();
         }
         LOGGER.debug("+++ AccountServiceImpl:getBalanceByClientId: "+balance+" " + id);
         return balance;
@@ -81,55 +81,20 @@ public class AccountServiceImpl implements IAccountService{
     @Override
     @Transactional(rollbackOn = Exception.class)
     public AccountDTO save(AccountPostDTO newAccount, Long id_client, Long id_branchOffice) {
-        // TODO Auto-generated method stub
-        Account account = this.toEntity(newAccount, id_client, id_branchOffice);
+        Account account = iAccountDAO.toEntity(newAccount);
         LOGGER.debug("+++ AccountServiceImpl:save: "+account.toString());
         LOGGER.debug("+++ Es mayor: "+account.getClient().idOfAge());
         if (!account.getClient().idOfAge() && account.getAccountType() == AccountType.CORRIENTE) {
             LOGGER.debug("--- AccountServiceImpl:save: No se puede crear una cuenta CORRIENTE para un cliente menor de edad");
             return null;
         }
-        return this.toDTO(accountRepository.save(account), id_client, id_branchOffice);
+        return iAccountDAO.toDTO(iAccountDAO.create(account));
     }
 
     public void update(Double amount, Long id) {
         LOGGER.debug("+++ AccountServiceImpl:update: "+amount+" " + id);
-		accountRepository.findById(id).map(
-                account -> {
-                    account.setBeginBalance(account.getBalance());
-                    account.setBalance(amount);
-                    return accountRepository.save(account);
-                }
-        );
+        Account account = iAccountDAO.read(id).get();
+		iAccountDAO.update(account, amount, id);
 	}
-
-    public AccountDTO toDTO(Account account, Long id_client, Long id_branchOffice) {
-        LOGGER.debug("+++ AccountServiceImpl:toDTO: "+account.toString());
-        BranchOfficeDTO branchOffice = branchOfficeServiceImpl.getById(id_branchOffice).get();
-        ClientDTO client = clientServiceImpl.getById(id_client).get();
-        return new AccountDTO(account.getId(), branchOffice, client, account.getAccountNumber(), account.getBalance(), account.getBeginBalance(), account.getAccountType(), account.getState());
-    }
-
-    public Account toEntity (AccountPostDTO accountDTO, Long id_client, Long id_branchOffice) {
-        LOGGER.debug("+++ AccountServiceImpl:toEntity: "+accountDTO.toString());
-        BranchOfficeDTO branchOfficeDTOP = branchOfficeServiceImpl.getById(id_branchOffice).get();
-        BranchOffice branchOffice = branchOfficeServiceImpl.toEntity(branchOfficeDTOP, branchOfficeDTOP.getAddress().getId(), branchOfficeDTOP.getEmployee().getId());
-        LOGGER.debug("+++ AccountServiceImpl:toEntity: "+branchOffice.toString());
-        ClientDTO clientDTO = clientServiceImpl.getById(id_client).get();
-        Client client = clientServiceImpl.toEntity(clientDTO, clientDTO.getAddress().getId());
-        LOGGER.debug("+++ AccountServiceImpl:toEntity: "+client.toString());
-        return new Account(branchOffice, client, accountDTO.getAccountNumber(), accountDTO.getBalance(), accountDTO.getBeginBalance(), accountDTO.getAccountType()); 
-    }
-
-    public Account toEntity (AccountDTO accountDTO, Long id_client, Long id_branchOffice) {
-        LOGGER.debug("+++ AccountServiceImpl:toEntity: "+accountDTO.toString());
-        BranchOfficeDTO branchOfficeDTOP = branchOfficeServiceImpl.getById(id_branchOffice).get();
-        BranchOffice branchOffice = branchOfficeServiceImpl.toEntity(branchOfficeDTOP, branchOfficeDTOP.getAddress().getId(), branchOfficeDTOP.getEmployee().getId());
-        LOGGER.debug("+++ AccountServiceImpl:toEntity: "+branchOffice.toString());
-        ClientDTO clientDTO = clientServiceImpl.getById(id_client).get();
-        Client client = clientServiceImpl.toEntity(clientDTO, clientDTO.getAddress().getId());
-        LOGGER.debug("+++ AccountServiceImpl:toEntity: "+client.toString());
-        return new Account(accountDTO.getId(), branchOffice, client, accountDTO.getAccountNumber(), accountDTO.getBalance(), accountDTO.getBeginBalance(), accountDTO.getAccountType()); 
-    }
 
 }

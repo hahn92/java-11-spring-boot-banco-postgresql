@@ -11,18 +11,19 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hahn.banco.dao.IAccountDAO;
+import com.hahn.banco.dao.IClientDAO;
+import com.hahn.banco.dao.IOperationDAO;
+import com.hahn.banco.dao.ITransactionDAO;
 import com.hahn.banco.dto.account.AccountDTO;
 import com.hahn.banco.dto.operation.OperationDTO;
 import com.hahn.banco.dto.operation.OperationPostDTO;
 import com.hahn.banco.dto.transaction.TransactionDTO;
-import com.hahn.banco.dto.transaction.TransactionPostDTO;
-import com.hahn.banco.entity.Account;
 import com.hahn.banco.entity.Client;
 import com.hahn.banco.entity.Operation;
 import com.hahn.banco.entity.Transaction;
 import com.hahn.banco.entity.constant.AccountType;
 import com.hahn.banco.entity.constant.OperationType;
-import com.hahn.banco.repository.OperationRepository;
 import com.hahn.banco.service.IOperationService;
 
 
@@ -34,28 +35,32 @@ public class OperationServiceImpl implements IOperationService{
     private static double TRM = 4400.00;
 	
     @Autowired
-    private OperationRepository operationRepository;
+    private IOperationDAO iOperationDAO;
     @Autowired
-    private AccountServiceImpl accountServiceImpl;
+    private IAccountDAO iAccountDAO;
     @Autowired
-    private TransactionServiceImpl transactionServiceImpl;
+    private ITransactionDAO iTransactionDAO;
     @Autowired 
-    private ClientServiceImpl clientServiceImpl;
+    private IClientDAO iClientDAO;
     
-    public OperationServiceImpl(OperationRepository operationRepository, AccountServiceImpl accountServiceImpl, TransactionServiceImpl transactionServiceImpl, ClientServiceImpl clientServiceImpl) {
-        this.operationRepository = operationRepository;
-        this.accountServiceImpl = accountServiceImpl;
-        this.transactionServiceImpl = transactionServiceImpl;
-        this.clientServiceImpl = clientServiceImpl;
+
+    public OperationServiceImpl(IOperationDAO iOperationDAO, IAccountDAO iAccountDAO, ITransactionDAO iTransactionDAO, IClientDAO iClientDAO) {
+        this.iOperationDAO = iOperationDAO;
+        this.iAccountDAO = iAccountDAO;
+        this.iTransactionDAO = iTransactionDAO;
+        this.iClientDAO = iClientDAO;
     }
 
+    
     @Override   
     public Optional<OperationDTO> getById(Long id) {
-        // TODO Auto-generated method stub
-        Operation operation = operationRepository.findById(id).get();
+        Operation operation = iOperationDAO.read(id).get();
         if(operation.getId() != null) {
             LOGGER.debug("+++ OperationServiceImpl:getById: "+operation.toString());
-            return Optional.of(this.toDTO(operation));
+            OperationDTO operationDTO = iOperationDAO.toDTO(operation);
+            iAccountDAO.read(operation.getAccount().getId()).ifPresent(account -> operationDTO.setAccount(iAccountDAO.toDTO(account)));
+            iTransactionDAO.read(operation.getTransaction().getId()).ifPresent(transaction -> operationDTO.setTransaction(iTransactionDAO.toDTO(transaction)));
+            return Optional.of(operationDTO);
         }
         LOGGER.debug("--- OperationServiceImpl:getById: No existe la ciudad con id: "+id);
         return null;
@@ -63,11 +68,10 @@ public class OperationServiceImpl implements IOperationService{
 
     @Override
     public List<OperationDTO> getOperationByAccountId(Long id) {
-        // TODO Auto-generated method stub
-        List<Operation> operations = operationRepository.findTop5ByAccountId(id);
+        List<Operation> operations = iOperationDAO.readTopFive(id);
         List<OperationDTO> operationDTOs = new ArrayList<>();
-        for (Operation op : operations) {
-            operationDTOs.add(this.toDTO(op));
+        for (Operation operation : operations) {
+            operationDTOs.add(iOperationDAO.toDTO(operation));
         }
         LOGGER.debug("+++ getOperationByAccountId:getOperationByAccountId: "+ id);
         return operationDTOs;
@@ -75,16 +79,14 @@ public class OperationServiceImpl implements IOperationService{
 
     @Override
     public OperationDTO save(OperationDTO newOperation) {
-        // TODO Auto-generated method stub
-        Operation operation = this.toEntity(newOperation); 
+        Operation operation = iOperationDAO.toEntity(newOperation); 
         LOGGER.debug("+++ OperationServiceImpl:save: "+operation.toString());
-        return this.toDTO(operationRepository.save(operation));
+        return iOperationDAO.toDTO(iOperationDAO.create(operation));
     }    
 
     public Operation save(Operation newOperation) {
-        // TODO Auto-generated method stub
         LOGGER.debug("+++ OperationServiceImpl:save: "+newOperation.toString());
-        return operationRepository.save(newOperation);
+        return iOperationDAO.create(newOperation);
     }   
 
     /* 
@@ -101,14 +103,14 @@ public class OperationServiceImpl implements IOperationService{
     @Override
     @Transactional(rollbackOn = Exception.class)
     public Boolean operation(OperationPostDTO newOperation, Long id_account1, Long id_account2) {
-        TransactionDTO transaction = transactionServiceImpl.save(new TransactionPostDTO());
+        TransactionDTO transaction = iTransactionDAO.toDTO(iTransactionDAO.create(new Transaction()));
         LOGGER.debug("+++ OperationServiceImpl:operation: "+transaction.toString());
-        AccountDTO account1 = accountServiceImpl.getById(id_account1).get(); 
+        AccountDTO account1 = iAccountDAO.toDTO(iAccountDAO.read(id_account1).get()); 
         LOGGER.debug("+++ OperationServiceImpl:operation: "+id_account1.toString());
 
         LOGGER.debug("+++ OperationServiceImpl:operation: " +newOperation.getOperationType());
         if (newOperation.getOperationType() == OperationType.TRANSFERENCIA){
-            AccountDTO account2 = accountServiceImpl.getById(id_account2).get(); 
+            AccountDTO account2 = iAccountDAO.toDTO(iAccountDAO.read(id_account2).get()); 
             LOGGER.debug("+++ OperationServiceImpl:operation: "+id_account1.toString());
             return this.Transferencia(account1, account2, newOperation.getAmount(), newOperation.getDescription(), transaction.getId(), newOperation.getOperationType());
         }else if (newOperation.getOperationType() == OperationType.RETIRO){
@@ -131,8 +133,8 @@ public class OperationServiceImpl implements IOperationService{
         LOGGER.debug("+++ OperationServiceImpl:Transferencia: "+account1.toString()+" "+account2.toString());
         Operation operation1 = new Operation();
         Operation operation2 = new Operation();
-        operation1.setAccount(accountServiceImpl.toEntity(account1, account1.getClient().getId(), account1.getBranchOffice().getId()));
-        operation2.setAccount(accountServiceImpl.toEntity(account2, account1.getClient().getId(), account1.getBranchOffice().getId()));
+        operation1.setAccount(iAccountDAO.toEntity(account1));
+        operation2.setAccount(iAccountDAO.toEntity(account2));
         return this.TranfrerenciaEntreCuentas(operation1, account1, operation2, account2, amount, description, id_transaction, operationType);
     }
     
@@ -144,7 +146,7 @@ public class OperationServiceImpl implements IOperationService{
     private boolean Consignacion(AccountDTO account1, Double amount, String description, Long id_transaction, OperationType operationType) {
         LOGGER.debug("+++ OperationServiceImpl:Consignacion: "+account1.toString());
         Operation operation1 = new Operation();
-        operation1.setAccount(accountServiceImpl.toEntity(account1, account1.getClient().getId(), account1.getBranchOffice().getId()));
+        operation1.setAccount(iAccountDAO.toEntity(account1));
         return OperacionEnCuenta(operation1, account1, amount, description, id_transaction, operationType);
     }
 
@@ -155,12 +157,12 @@ public class OperationServiceImpl implements IOperationService{
     */
     private boolean Retiro(AccountDTO account, Double amount, String description, Long id_transaction, AccountType accountType, OperationType operationType) {
         Operation operation = new Operation();
-        operation.setAccount(accountServiceImpl.toEntity(account, account.getClient().getId(), account.getBranchOffice().getId()));
+        operation.setAccount(iAccountDAO.toEntity(account));
         LOGGER.debug("+++ OperationServiceImpl:Retiro: "+account.toString());
 
         if (accountType == AccountType.AHORROS){
             LOGGER.debug("+++ OperationServiceImpl:operation: AHORROS");
-            Client client = clientServiceImpl.toEntity(account.getClient(), account.getClient().getAddress().getId());
+            Client client = iClientDAO.toEntity(account.getClient());
             if ((account.getBalance() > amount && client.idOfAge()) || ((account.getBalance() - 10000) > amount)) {
                 return this.OperacionEnCuenta(operation, account, (amount * -1), description, id_transaction, operationType);
             }else{
@@ -183,7 +185,7 @@ public class OperationServiceImpl implements IOperationService{
         Double newAmmoun = TRM*amount;
         LOGGER.debug("+++ OperationServiceImpl:Divisas: "+account1.toString());
         Operation operation1 = new Operation();
-        operation1.setAccount(accountServiceImpl.toEntity(account1, account1.getClient().getId(), account1.getBranchOffice().getId()));
+        operation1.setAccount(iAccountDAO.toEntity(account1));
         return OperacionEnCuenta(operation1, account1, newAmmoun, description, id_transaction, operationType);
     }
 
@@ -198,24 +200,24 @@ public class OperationServiceImpl implements IOperationService{
         
         operation1.setAmount(amount);
         operation1.setDescription(description);
-        operation1.setTransaction(transactionServiceImpl.toEntity(transactionServiceImpl.getById(id_transaction).get()));
+        operation1.setTransaction(iTransactionDAO.read(id_transaction).get());
         operation1.setOperationType(operationType);
         Double newBalance1 = account1.getBalance() + amount;
         LOGGER.debug("+++ OperationServiceImpl:newBalance1: "+newBalance1);
         operation1.setBalance(newBalance1);
         this.save(operation1);
-        accountServiceImpl.update(operation1.getBalance(), operation1.getAccount().getId());
+        iAccountDAO.update(operation1.getAccount(), newBalance1, operation1.getAccount().getId());
 
 
         operation2.setAmount(amount);
         operation2.setDescription(description);
-        operation2.setTransaction(transactionServiceImpl.toEntity(transactionServiceImpl.getById(id_transaction).get()));
+        operation2.setTransaction(iTransactionDAO.read(id_transaction).get());
         operation2.setOperationType(operationType);
         Double newBalance2 = account2.getBalance() - amount;
         LOGGER.debug("+++ OperationServiceImpl:newBalance2: "+newBalance2);
         operation2.setBalance(newBalance2);
         this.save(operation2);
-        accountServiceImpl.update(operation2.getBalance(), operation2.getAccount().getId());
+        iAccountDAO.update(operation2.getAccount(), newBalance2, operation2.getAccount().getId());
 
         return true;
     }
@@ -231,28 +233,15 @@ public class OperationServiceImpl implements IOperationService{
         
         operation1.setAmount(amount);
         operation1.setDescription(description);
-        operation1.setTransaction(transactionServiceImpl.toEntity(transactionServiceImpl.getById(id_transaction).get()));
+        operation1.setTransaction(iTransactionDAO.read(id_transaction).get());
         operation1.setOperationType(operationType);
         Double newBalance1 = account1.getBalance() + amount;
         LOGGER.debug("+++ OperationServiceImpl:newBalance1: "+newBalance1);
         operation1.setBalance(newBalance1);
         this.save(operation1);
-        accountServiceImpl.update(operation1.getBalance(), operation1.getAccount().getId());
+        iAccountDAO.update(operation1.getAccount(), newBalance1, operation1.getAccount().getId());
 
         return true;
-    }
-
-    
-    public OperationDTO toDTO(Operation operation) {
-        LOGGER.debug("+++ OperationServiceImpl:toDTO: "+operation.toString());
-        return new OperationDTO(operation.getId(), accountServiceImpl.toDTO(operation.getAccount(), operation.getAccount().getClient().getId(), operation.getAccount().getBranchOffice().getId()), transactionServiceImpl.toDTO(operation.getTransaction()), operation.getOperationType(), operation.getBalance(), operation.getAmount(), operation.getDescription(), operation.getState());
-    }
-
-    public Operation toEntity (OperationDTO operationDTO) {
-        LOGGER.debug("+++ OperationServiceImpl:toEntity: "+operationDTO.toString());
-        Account account = accountServiceImpl.toEntity(operationDTO.getAccount(), operationDTO.getAccount().getClient().getId(), operationDTO.getAccount().getBranchOffice().getId());
-        Transaction transaction = transactionServiceImpl.toEntity(operationDTO.getTransaction());
-        return new Operation(account, transaction, operationDTO.getOperationType(), operationDTO.getBalance(), operationDTO.getAmount(), operationDTO.getDescription());   
     }
 
 }

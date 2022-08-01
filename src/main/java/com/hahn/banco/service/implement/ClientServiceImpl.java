@@ -17,12 +17,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.hahn.banco.dto.address.AddressDTO;
+import com.hahn.banco.dao.IAddressDAO;
+import com.hahn.banco.dao.IClientDAO;
 import com.hahn.banco.dto.client.ClientDTO;
 import com.hahn.banco.dto.client.ClientPostDTO;
-import com.hahn.banco.entity.Address;
 import com.hahn.banco.entity.Client;
-import com.hahn.banco.repository.ClientRepository;
 import com.hahn.banco.service.IClientService;
 
 
@@ -32,22 +31,25 @@ public class ClientServiceImpl implements UserDetailsService, IClientService {
     private static final Log LOGGER = LogFactory.getLog(ClientServiceImpl.class);
 	
     @Autowired
-    private ClientRepository clientRepository;
+    private IClientDAO iClientDAO;
     @Autowired
-    private AddressServiceImpl addressServiceImpl;
+    private IAddressDAO iAddressDAO;
 	
-	public ClientServiceImpl(ClientRepository clientRepository, AddressServiceImpl addressServiceImpl) {
-        this.clientRepository = clientRepository;
-        this.addressServiceImpl = addressServiceImpl;
+
+	public ClientServiceImpl(IClientDAO iClientDAO, IAddressDAO iAddressDAO) {
+        this.iClientDAO = iClientDAO;
+        this.iAddressDAO = iAddressDAO;
     }
+    
 
     @Override   
     public Optional<ClientDTO> getById(Long id) {
-        // TODO Auto-generated method stub
-        Client client = clientRepository.findById(id).get();
+        Client client = iClientDAO.read(id).get();
         if(client.getId() != null) {
             LOGGER.debug("+++ ClientServiceImpl:getById: "+client.toString());
-            return Optional.of(this.toDTO(client, client.getAddress().getId()));
+            ClientDTO clientDTO = iClientDAO.toDTO(client);
+            iAddressDAO.read(client.getAddress().getId()).ifPresent(department -> clientDTO.setAddress(iAddressDAO.toDTO(department)));
+            return Optional.of(clientDTO);
         }
         LOGGER.debug("--- ClientServiceImpl:getById: No se encontro el cliente con id: "+id);
         return null;
@@ -56,46 +58,25 @@ public class ClientServiceImpl implements UserDetailsService, IClientService {
     @Override
     @Transactional(rollbackOn = Exception.class)
     public ClientDTO save(ClientPostDTO newClient, Long id_address) {
-        // TODO Auto-generated method stub
-        Client client = this.toEntity(newClient, id_address); 
+        Client client = iClientDAO.toEntity(newClient); 
         LOGGER.debug("+++ ClientServiceImpl:save: "+client.toString());
-        return this.toDTO(clientRepository.save(client), id_address);
+        iAddressDAO.read(id_address).ifPresent(address -> client.setAddress(address));
+        return iClientDAO.toDTO(iClientDAO.create(client));
     }
 
 	/* 
 	 * funcion para login con JWT	
 	*/
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Client us = clientRepository.findByUsername(username);
+		Client client = iClientDAO.readByUsername(username).get();
 		
 		List<GrantedAuthority> roles = new ArrayList<>();
 		roles.add(new SimpleGrantedAuthority("ADMIN"));
 		
-		UserDetails userDet = new User(us.getUsername(), us.getPassword(), roles);
+		UserDetails userDet = new User(client.getUsername(), client.getPassword(), roles);
 		
 		return userDet;
 		 
 	}
-
-    public ClientDTO toDTO(Client client, Long id_address) {
-        LOGGER.debug("+++ ClientServiceImpl:toDTO: "+client.toString());
-        return new ClientDTO(client.getId(), client.getName(), client.getSurname(), client.getUsername(), client.getEmail(), client.getBirthdate(), client.getTelephone(), client.getDocumentType(), client.getDocument(), addressServiceImpl.getById(id_address).get(), client.getState());
-    }
-
-    public Client toEntity (ClientPostDTO clientDTO, Long id_address) {
-        LOGGER.debug("+++ ClientServiceImpl:toEntity: "+clientDTO.toString());
-        AddressDTO addressDTO = addressServiceImpl.getById(id_address).get();
-        Address address = addressServiceImpl.toEntity(addressDTO, addressDTO.getCity().getId());
-        LOGGER.debug("+++ ClientServiceImpl:toEntity: "+address.toString());
-        return new Client(address, clientDTO.getName(), clientDTO.getSurname(), clientDTO.getTelephone(), clientDTO.getDocumentType(), clientDTO.getDocument(), clientDTO.getBirthdate(), clientDTO.getUsername(), clientDTO.getEmail(), clientDTO.getPassword());   
-    }
-
-    public Client toEntity (ClientDTO clientDTO, Long id_address) {
-        LOGGER.debug("+++ ClientServiceImpl:toEntity: "+clientDTO.toString());
-        AddressDTO addressDTO = addressServiceImpl.getById(id_address).get();
-        Address address = addressServiceImpl.toEntity(addressDTO, addressDTO.getCity().getId());
-        LOGGER.debug("+++ ClientServiceImpl:toEntity: "+address.toString());
-        return new Client(clientDTO.getId(), address, clientDTO.getName(), clientDTO.getSurname(), clientDTO.getTelephone(), clientDTO.getDocumentType(), clientDTO.getDocument(), clientDTO.getBirthdate(), clientDTO.getUsername(), clientDTO.getEmail(), "123456789");    
-    }
 
 }

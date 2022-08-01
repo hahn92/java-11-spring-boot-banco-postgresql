@@ -9,10 +9,10 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hahn.banco.dao.IDepartmentDAO;
 import com.hahn.banco.dto.department.DepartmentDTO;
 import com.hahn.banco.dto.department.DepartmentPostDTO;
 import com.hahn.banco.entity.Department;
-import com.hahn.banco.repository.DepartmentRepository;
 import com.hahn.banco.service.IDepartmentService;
 
 
@@ -22,47 +22,30 @@ public class DepartmentServiceImpl implements IDepartmentService {
     private static final Log LOGGER = LogFactory.getLog(DepartmentServiceImpl.class);
 	
     @Autowired
-    private DepartmentRepository departmentRepository;
+    private IDepartmentDAO iDepartmentDAO;
 	
-	public DepartmentServiceImpl(DepartmentRepository departmentRepository) {
-        this.departmentRepository = departmentRepository;
+
+	public DepartmentServiceImpl(IDepartmentDAO iDepartmentDAO) {
+        this.iDepartmentDAO = iDepartmentDAO;
     }
+
 
     @Override   
     public Optional<DepartmentDTO> getById(Long id) {
-        // TODO Auto-generated method stub
-        Department department = departmentRepository.findById(id).get();
+        LOGGER.debug("+++ DepartmentServiceImpl:getById: "+id);
+        Department department = iDepartmentDAO.read(id).get();
         if(department.getId() != null) {
-            LOGGER.debug("+++ DepartmentServiceImpl:getById: "+department.toString());
-            return Optional.of(this.toDTO(department));
+            return Optional.of(iDepartmentDAO.toDTO(department));
         }
-        LOGGER.debug("--- DepartmentServiceImpl:getById: No existe el departamento con id: "+id);
         return null;
     }
 
     @Override
     @Transactional(rollbackOn = Exception.class)
     public DepartmentDTO save(DepartmentPostDTO newDepartment) {
-        // TODO Auto-generated method stub
-        Department department = this.toEntity(newDepartment); 
-        LOGGER.debug("+++ DepartmentServiceImpl:save: "+department.toString());
-        return this.toDTO(departmentRepository.save(department));
-    }
-
-
-    public DepartmentDTO toDTO(Department department) {
-        LOGGER.debug("+++ DepartmentServiceImpl:toDTO: "+department.toString());
-        return new DepartmentDTO(department.getId(), department.getName(), department.getState());
-    }
-
-    public Department toEntity (DepartmentPostDTO departmentDTO) {
-        LOGGER.debug("+++ DepartmentServiceImpl:toEntity: "+departmentDTO.toString());
-        return new Department(departmentDTO.getName());   
-    }
-
-    public Department toEntity (DepartmentDTO departmentDTO) {
-        LOGGER.debug("+++ DepartmentServiceImpl:toEntity: "+departmentDTO.toString());
-        return new Department(departmentDTO.getId(), departmentDTO.getName());   
+        LOGGER.debug("+++ DepartmentServiceImpl:save: "+newDepartment);
+        Department department = iDepartmentDAO.toEntity(newDepartment); 
+        return iDepartmentDAO.toDTO(iDepartmentDAO.create(department));
     }
 
 }

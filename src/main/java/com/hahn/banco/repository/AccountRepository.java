@@ -14,5 +14,9 @@ public interface AccountRepository extends PagingAndSortingRepository<Account, I
     Optional<Account> findById(Long id);
 
     List<Account> findByClientId(Long id);
+
+    void deleteById(Long id);
+
+    List<Account> findByName(String name);
     
 }

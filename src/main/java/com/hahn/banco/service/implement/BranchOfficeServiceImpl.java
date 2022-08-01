@@ -9,14 +9,12 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hahn.banco.dto.address.AddressDTO;
+import com.hahn.banco.dao.IAddressDAO;
+import com.hahn.banco.dao.IBranchOfficeDAO;
+import com.hahn.banco.dao.IEmployeeDAO;
 import com.hahn.banco.dto.branchOffice.BranchOfficeDTO;
 import com.hahn.banco.dto.branchOffice.BranchOfficePostDTO;
-import com.hahn.banco.dto.employee.EmployeeDTO;
-import com.hahn.banco.entity.Address;
 import com.hahn.banco.entity.BranchOffice;
-import com.hahn.banco.entity.Employee;
-import com.hahn.banco.repository.BranchOfficeRepository;
 import com.hahn.banco.service.IBranchOfficeService;
 
 
@@ -26,25 +24,28 @@ public class BranchOfficeServiceImpl implements IBranchOfficeService{
     private static final Log LOGGER = LogFactory.getLog(BranchOfficeServiceImpl.class);
 	
     @Autowired
-    private BranchOfficeRepository branchOfficeRepository;
+    private IBranchOfficeDAO iBranchOfficeDAO;
     @Autowired
-    private AddressServiceImpl addressServiceImpl;
+    private IEmployeeDAO iEmployeeDAO;
     @Autowired
-    private EmpleoyeeServiceImpl empleoyeeServiceImpl;
+    private IAddressDAO iAddressDAO;
 	
-    public BranchOfficeServiceImpl(BranchOfficeRepository branchOfficeRepository, AddressServiceImpl addressServiceImpl, EmpleoyeeServiceImpl empleoyeeServiceImpl) {
-        this.branchOfficeRepository = branchOfficeRepository;
-        this.addressServiceImpl = addressServiceImpl;
-        this.empleoyeeServiceImpl = empleoyeeServiceImpl;
+
+    public BranchOfficeServiceImpl(IBranchOfficeDAO iBranchOfficeDAO, IEmployeeDAO iEmployeeDAO, IAddressDAO iAddressDAO) {
+        this.iBranchOfficeDAO = iBranchOfficeDAO;
+        this.iEmployeeDAO = iEmployeeDAO;
+        this.iAddressDAO = iAddressDAO;
     }
 
+    
     @Override   
     public Optional<BranchOfficeDTO> getById(Long id) {
-        // TODO Auto-generated method stub
-        BranchOffice branchOffice = branchOfficeRepository.findById(id).get();
+        BranchOffice branchOffice = iBranchOfficeDAO.read(id).get();
         if(branchOffice.getId() != null) {
             LOGGER.debug("+++ BranchOfficeServiceImpl:getById: "+branchOffice.toString());
-            return Optional.of(this.toDTO(branchOffice,  branchOffice.getAddress().getId(), branchOffice.getEmployee().getId()));
+            BranchOfficeDTO branchOfficeDTO = iBranchOfficeDAO.toDTO(branchOffice);
+            iEmployeeDAO.read(branchOffice.getEmployee().getId()).ifPresent(department -> branchOfficeDTO.setEmployee(iEmployeeDAO.toDTO(department)));
+            return Optional.of(branchOfficeDTO);
         }
         LOGGER.debug("--- BranchOfficeServiceImpl:getById: No existe la ciudad con id: "+id);
         return null;
@@ -53,36 +54,12 @@ public class BranchOfficeServiceImpl implements IBranchOfficeService{
     @Override
     @Transactional(rollbackOn = Exception.class)
     public BranchOfficeDTO save(BranchOfficePostDTO newBranchOffice, Long id_address, Long id_employee) {
-        // TODO Auto-generated method stub
-        BranchOffice branchOffice = this.toEntity(newBranchOffice, id_address, id_employee);
+        BranchOffice branchOffice = iBranchOfficeDAO.toEntity(newBranchOffice);
         LOGGER.debug("+++ BranchOfficeServiceImpl:save: "+branchOffice.toString());
-        return this.toDTO(branchOfficeRepository.save(branchOffice), id_address, id_employee);
+        iEmployeeDAO.read(id_employee).ifPresent(employee -> branchOffice.setEmployee(employee));
+        iAddressDAO.read(id_address).ifPresent(address -> branchOffice.setAddress(address));
+        return iBranchOfficeDAO.toDTO(iBranchOfficeDAO.create(branchOffice));
     }
 
-
-    public BranchOfficeDTO toDTO(BranchOffice branchOffice, Long id_address, Long id_employee) {
-        LOGGER.debug("+++ BranchOfficeServiceImpl:toDTO: "+branchOffice.toString());
-        return new BranchOfficeDTO(branchOffice.getId(), branchOffice.getName(), branchOffice.getCode(), addressServiceImpl.toDTO(branchOffice.getAddress(), branchOffice.getAddress().getCity().getId()), empleoyeeServiceImpl.toDTO(branchOffice.getEmployee(), branchOffice.getEmployee().getRole().getId(), branchOffice.getEmployee().getAddress().getId()), branchOffice.getState());
-    }
-
-    public BranchOffice toEntity (BranchOfficePostDTO branchOfficeDTO, Long id_address, Long id_employee) {
-        LOGGER.debug("+++ BranchOfficeServiceImpl:toEntity: "+branchOfficeDTO.toString());
-        EmployeeDTO employeeDTO = empleoyeeServiceImpl.getById(id_employee).get();
-        Employee employee = empleoyeeServiceImpl.toEntity(employeeDTO, employeeDTO.getRole().getId(), employeeDTO.getAddress().getId());
-        AddressDTO addressDTO = addressServiceImpl.getById(id_address).get();
-        Address address = addressServiceImpl.toEntity(addressDTO, addressDTO.getCity().getId());
-        LOGGER.debug("+++ BranchOfficeServiceImpl:toEntity: "+employee.toString());
-        return new BranchOffice(employee, address, branchOfficeDTO.getName(), branchOfficeDTO.getCode());   
-    }
-
-    public BranchOffice toEntity (BranchOfficeDTO branchOfficeDTO, Long id_address, Long id_employee) {
-        LOGGER.debug("+++ BranchOfficeServiceImpl:toEntity: "+branchOfficeDTO.toString());
-        EmployeeDTO employeeDTO = empleoyeeServiceImpl.getById(id_employee).get();
-        Employee employee = empleoyeeServiceImpl.toEntity(employeeDTO, employeeDTO.getRole().getId(), employeeDTO.getAddress().getId());
-        AddressDTO addressDTO = addressServiceImpl.getById(id_address).get();
-        Address address = addressServiceImpl.toEntity(addressDTO, addressDTO.getCity().getId());
-        LOGGER.debug("+++ BranchOfficeServiceImpl:toEntity: "+employee.toString());
-        return new BranchOffice(branchOfficeDTO.getId(), employee, address, branchOfficeDTO.getName(), branchOfficeDTO.getCode());   
-    }
 
 }

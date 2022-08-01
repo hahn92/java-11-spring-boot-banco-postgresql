@@ -9,6 +9,6 @@ public interface IEmployeeService {
 
     Optional<EmployeeDTO> getById(Long id);
 
-    EmployeeDTO save(EmployeePostDTO newEmployee, Long id_address);
+    EmployeeDTO save(EmployeePostDTO newEmployee, Long id_address, Long id_role);
     
 }

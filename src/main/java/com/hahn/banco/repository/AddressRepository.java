@@ -1,5 +1,6 @@
 package com.hahn.banco.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -11,5 +12,9 @@ import com.hahn.banco.entity.Address;
 public interface AddressRepository extends PagingAndSortingRepository<Address, Integer> {
 
     Optional<Address> findById(Long id);
+
+    List<Address> findByName(String name);
+
+    void deleteById(Long id);
     
 }

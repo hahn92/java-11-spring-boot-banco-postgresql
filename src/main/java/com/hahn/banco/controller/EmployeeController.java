@@ -44,11 +44,11 @@ public class EmployeeController {
 		}
 	}
 
-	@PostMapping("address/{id_address}/employee/")
-	public ResponseEntity<EmployeeDTO> EmployeeSave(@PathVariable Long id_address, @Valid EmployeePostDTO newEmployee) {
+	@PostMapping("role/{id_role}/address/{id_address}/employee/")
+	public ResponseEntity<EmployeeDTO> EmployeeSave(@PathVariable Long id_address, @Valid EmployeePostDTO newEmployee, @PathVariable Long id_role) {
 		LOGGER.debug("+++ EmployeeSave: "+newEmployee.toString());
 		try {
-			return new ResponseEntity<>(iEmployeeService.save(newEmployee, id_address), HttpStatus.CREATED);
+			return new ResponseEntity<>(iEmployeeService.save(newEmployee, id_address, id_role), HttpStatus.CREATED);
 		}catch (Exception e){
 			LOGGER.error("Rollback error registro Empleado: "+e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
